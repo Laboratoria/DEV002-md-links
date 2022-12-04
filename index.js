@@ -4,45 +4,58 @@ module.exports = () => {
   // ...
 };
 
-/* lee documento .md
-https://nodejs.dev/en/learn/reading-files-with-nodejs/ */
-
 const fs = require('fs');
-
-fs.readFile('./mdtests/part1.md', 'utf8', (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  console.log("\nlectura archivo:\n \n" + data);
-});
-
-/* file extension
-https://codingbeautydev.com/blog/node-js-get-file-extension/
-https://www.programiz.com/javascript/examples/file-extension */
-
 const path = require('path');
 
-const readMePartOne = './mdtests/part1.md';
 
-/* obtiene la CARPETA en la que está almacenado el archivo */
-console.log("dirname: " + path.dirname(readMePartOne))
-/* obtiene el NOMBRE BASE del archivo */
-console.log("basename: " + path.basename(readMePartOne))
-/* obtiene la EXTENCIÓN del archivo */
-console.log("extension: " + path.extname(readMePartOne))
-/* obtiene la RUTA ABSOLUTA del archivo */
-console.log("resolve: " + path.resolve(readMePartOne))
+// fs.readdir(readingFile, (err, files) => {
+//   if (err)
+//     console.log(err);
+//   else {
+//     console.log("\nCurrent directory filenames: ");
+//     files.forEach(file => {
+//       console.log(file);
+//     })
+//   }
+// })
 
-/* getting paths OF A FILE
-https://nodejs.dev/en/learn/working-with-folders-in-nodejs/ */
+//return fs.readdirSync(readingFile).map(fileName => {
 
-const file = './mdtests';
-
-/* relative path */
-console.log("relative path: " + fs.readdirSync(file))
-
-/* absolute path */
-fs.readdirSync(file).map(fileName => {
-  console.log("absolute path: " + path.join(file, fileName))
-});
+const mdLinks = (readingFile) => {
+  const fileString = readingFile.toString()
+  return fs.readdir(fileString, (err, files) => {
+    if (err){
+      //console.log(err);
+      return err
+    }
+    else {
+      //console.log("\nCurrent directory filenames: ");
+      files.forEach(file => {
+        //console.log(file);
+      return file
+      })
+    }
+  const filePaths = path.join(fileString, files)
+  //console.log("filePaths: " + filePaths)
+  const fileExt = path.extname(filePaths)
+  //console.log("fileExt: " + fileExt)
+  if (fileExt === ".md"){
+    const justMD = filePaths.slice(".md").split(",")
+    //console.log("justMD: " + justMD)
+    const mdString = justMD.toString()
+    //console.log("mdString: " + mdString)
+    const resolvePath = path.resolve(mdString)
+    //console.log("resolvePath: " + resolvePath)
+    return fs.readFile(resolvePath, (err, data) => {
+      if (err) {
+        //console.error("error " + err);
+        return err;
+      } else {
+      //console.log("data:\n" + data)
+      return data
+      }
+    })
+  }
+  })
+}
+console.log("function:\n" , mdLinks('./mdtests'))
