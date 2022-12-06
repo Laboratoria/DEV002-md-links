@@ -7,20 +7,6 @@ module.exports = () => {
 const fs = require('fs');
 const path = require('path');
 
-
-// fs.readdir(readingFile, (err, files) => {
-//   if (err)
-//     console.log(err);
-//   else {
-//     console.log("\nCurrent directory filenames: ");
-//     files.forEach(file => {
-//       console.log(file);
-//     })
-//   }
-// })
-
-//return fs.readdirSync(readingFile).map(fileName => {
-
 const mdLinks = (readingFile) => {
   return new Promise((resolve, reject) => {
   const fileString = readingFile.toString()
@@ -46,51 +32,24 @@ const mdLinks = (readingFile) => {
             //console.log("resolvePath: " + resolvePath)
             fs.readFile(resolvePath, (err, data) => {
               if (err) {
-                //console.error("error 2 " + err);
-                return notDone(err);
+                //console.error("error 2: " + err);
+                notDone(err);
               } else {
-                console.log("data:\n" + data)
-                return done(data)
+                //console.log("data:\n" + data)
+                done(data)
               }
             })
           }
         })
       })
-      //console.log("files " + files)
-      //const completeReadingFiles = Promise.all(readingFiles)
-      //console.log("mimi:", readingFiles)
-      // Promise.all(readingFiles).then(values => {
-      //   console.log(values)
-        // return resolve("values")
-      //})
-      return resolve(readingFiles)
+      resolve(readingFiles)
     }
   })
-  // const filePaths = path.join(fileString, files)
-  // //console.log("filePaths: " + filePaths)
-  // const fileExt = path.extname(filePaths)
-  // //console.log("fileExt: " + fileExt)
-  // if (fileExt === ".md"){
-  //   const justMD = filePaths.slice(".md").split(",")
-  //   //console.log("justMD: " + justMD)
-  //   const mdString = justMD.toString()
-  //   //console.log("mdString: " + mdString)
-  //   const resolvePath = path.resolve(mdString)
-  //   //console.log("resolvePath: " + resolvePath)
-  //   return fs.readFile(resolvePath, (err, data) => {
-  //     if (err) {
-  //       //console.error("error " + err);
-  //       return err;
-  //     } else {
-  //     //console.log("data:\n" + data)
-  //     return data
-  //     }
-  //   })
-  // }
   })
 }
-mdLinks('./mdtests').then(async (readingFiles) => {
-  const values = await Promise.all(readingFiles)
+
+mdLinks('./mdtests').then((readingFiles) => {
+  const values = Promise.all(readingFiles)
   // Promise.all(readingFiles).then(values => {
   //   console.log("values; ", values)
   // })
