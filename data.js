@@ -62,7 +62,7 @@ const isDirectory = (ruta) => new Promise((resolve, reject) => {
     })
 })
 
-/* console.log de readDirFun, también sirve para utilizar la función */
+/* filtra archivos .md */
 /**
  * 
  * @param {string} ruta 
@@ -92,6 +92,7 @@ const onlyMdFiles = (ruta) => new Promise((resolve, reject) => {
     })
 })
 
+/* obtiene los links desde un archivo .md */
 const getLinksFromMdFile = (file) => new Promise((resolve, reject) => {
     readFileFun(file).then((gettingLinks)=>{
         //console.log("gettingLinks: ", gettingLinks)
@@ -103,6 +104,7 @@ const getLinksFromMdFile = (file) => new Promise((resolve, reject) => {
     })
 })
 
+/* obtiene los links desde múltiples archivos .md */
 const getLinksFromMdFiles = (mdFiles) => new Promise((resolve, reject) => {
     const promises = mdFiles.map((element) => getLinksFromMdFile(element))
     resolve(Promise.all(promises))
