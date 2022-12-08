@@ -1,27 +1,22 @@
-
-
-
-
-/* Leer archivos */
 const fs = require("fs");
 const reExp = /\[([^\]]+)\]\(([^)]+)\)/g
 const path = require('path')
-const route = './files/preambulo.md'
+const route = './files'
 const mdFiles = []
 
-/* const findLinks = new Promise(function(resolve, reject){
-
-  fs.readFile(route, "utf8", (e, data) => {
-    const links = data.match(reExp)
-    if(links){
-      resolve(`hay links ${links}`)
+/* Evaluar si la ruta es o no valida */
+const isRouteValid = new Promise(function(resolve, reject){
+  fs.access(route, (e) => {
+    if(e){
+      reject('No se puede acceder a la ruta')
     } else {
-      reject('no hay links')
+      console.log('La ruta es valida')
+      resolve(isDirectoryOrFile)
     }
   })
 })
 
-findLinks.then((resultado) => {
+/* isRouteValid.then((resultado) => {
   console.log(resultado)
 }).catch((error) => {
   console.log(error)
@@ -32,9 +27,10 @@ const isDirectoryOrFile = new Promise(function(resolve, reject){
 
   fs.stat(route, (e, data) => {
     if(data.isDirectory()){
+      console.log('Soy una carpeta')
       resolve(isMarkDown)
     } else {
-      reject(`Soy un archivo`)
+      reject('soy un archivo')
     }
   })
 })
@@ -43,7 +39,6 @@ const isDirectoryOrFile = new Promise(function(resolve, reject){
 const isMarkDown = new Promise(function(resolve, reject){
 
   fs.readdir(route, (e, data) => {
-
     data?.forEach(item => {
       if(path.extname(item) == '.md'){
         mdFiles.push(item)
@@ -51,14 +46,32 @@ const isMarkDown = new Promise(function(resolve, reject){
     })
 
     if(mdFiles.length >= 1){
-      resolve('si hay archivos mark down: ' + mdFiles)
+      console.log('si hay archivos mark down: ' + mdFiles)
+      resolve(findLinks)
     } else {
       reject('no hay archivos para mostrar')
     }
   })
 })
 
-Promise.allSettled([isDirectoryOrFile, isMarkDown]).then((resultado) => {
+/* Leer archivos */
+
+
+const findLinks = new Promise(function(resolve, reject){
+
+  mdFiles.forEach(file => {
+    fs.readFile(path.resolve(route, file), "utf8", (e, data) => {
+      const links = data.match(reExp)
+      if(links){
+        resolve(`los links son: ${links}`)
+      } else {
+        reject('no hay links')
+      }
+    })
+  })
+})
+
+Promise.allSettled([isRouteValid, isDirectoryOrFile, isMarkDown, findLinks]).then((resultado) => {
   console.log(resultado)
 }).catch((error) => {
   console.log(error)
