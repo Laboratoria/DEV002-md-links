@@ -1,30 +1,28 @@
-const { isDirectory, onlyMdFiles, getLinksFromMdFile, getLinksFromMdFiles } = require("./data.js")
+const { getAllFilesRecursive, getLinksFromMdFiles, isValidURL } = require("./data.js")
 
 const isValid = require("is-valid-path");
 
-const ruta = "./mdtests"
-const rutaPart1 = "./mdtests/part1.md"
-const rutaPart2 = "./mdtests/part2.md"
-const rutaPart3 = "./mdtests/part3.md"
-const rutaPart4 = "./mdtests/part4.md"
-
-const mdLink = (rutita) => new Promise((resolve, reject) => {
-    if (!isValid(rutita)) reject("INVALID PATH");
-    //console.log("rutita: ", rutita)
-    isDirectory(rutita).then(isFolder => {
-        if (isFolder) {
-            onlyMdFiles(rutita).then(files => {
-                //console.log("files: ", files)
-                getLinksFromMdFiles(files).then(links => resolve(links))
-            })
-        } else {
-            getLinksFromMdFile(rutita).then(links => {
-                //console.log("links: ", links)
-                resolve(links)
-            })
-        }
-    })  
+const mdLinks = (rutita) => new Promise((resolve, reject) => {
+    if (!isValid(rutita)) {
+        reject("INVALID PATH")
+    } else {
+        const mdFiles = getAllFilesRecursive(rutita)
+        getLinksFromMdFiles(mdFiles).then(links => {
+            resolve(links)
+            // isValidURL(links.flat()).then(link =>{
+            //     resolve(link)
+            // })
+        })
+    }
 })
 
-mdLink(ruta).then(console.log)
-// mdLink(rutaPart1)
+const ruta = "./mdtests"
+const part1 = "./mdtests/part1.md"
+const part2 = "./mdtests/parte2/part2.md"
+const part3 = "./mdtests/parte2/parte3/part3.md"
+const part4 = "./mdtests/parte2/parte3/parte4/part4.md"
+const route = process.argv[2];
+
+mdLinks(route).then(console.log)
+
+module.exports = { mdLinks }
