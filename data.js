@@ -19,7 +19,10 @@ const readFileFun = (ruta) => {
 const getLinksFromMdFile = (file) => new Promise((resolve, reject) => {
     readFileFun(file).then((gettingLinks)=>{
         const { links } = markdownLinkExtractor(gettingLinks);
-        resolve(links)
+        const filePlusLinks = links.map((link)=>{
+            return {file, link}
+        })
+        resolve(filePlusLinks)
     })
 })
 
@@ -56,8 +59,7 @@ const getAllFilesRecursive = (ruta, files = []) => {
             }else {
                 const filesExts = path.extname(route)
                 if (filesExts === ".md") {
-                    const resolvePaths = path.resolve(route)
-                    files.push(resolvePaths)
+                    files.push(route)
                 }
             }
         })
@@ -65,11 +67,30 @@ const getAllFilesRecursive = (ruta, files = []) => {
     } else {
         fileExt = path.extname(ruta)
         if (fileExt === ".md") {
-            const resolvePaths = path.resolve(ruta)
-            files.push(resolvePaths)
+            files.push(ruta)
             return files
         }
     }
 }
 
-module.exports = { getAllFilesRecursive, getLinksFromMdFiles, isValidURL };
+const validateFlag = (argumentos)=>{
+    return argumentos.find((vFlag) => vFlag === "--validate")
+}
+
+const statsFlag = (argumentos)=>{
+    return argumentos.find((sFlag) => sFlag === "--stats")
+}
+
+/* cantidad de links */
+const totalLinks = (links) => {
+    const totalLinks = links.flat().length
+    return totalLinks
+}
+
+/* cantidad de links rotos */
+const totalBrokenLinks = (links) => links.flat().filter((link)=> link.isValid === false)
+
+/* cantidad de links válidos */
+const totalValidLinks = (links) => links.flat().filter((link)=> link.isValid)
+
+module.exports = { getAllFilesRecursive, getLinksFromMdFiles, isValidURL, validateFlag, statsFlag, totalLinks, totalBrokenLinks, totalValidLinks };
