@@ -2,7 +2,7 @@ const fs = require("fs");
 const axios = require('axios').default;
 const reExp = /\[([^\]]+)\]\(([^)]+)\)/g
 const path = require('path')
-const route = './files'
+const route = './files/preambulo.md'
 const mdFiles = []
 
 /* Evaluar si la ruta es o no valida */
@@ -28,19 +28,38 @@ function isDirectoryOrFile(route){
     fs.stat(route, (e, data) => {
       if(data.isDirectory()){
         console.log('Soy una carpeta')
-        resolve(isMarkDown(route))
+        resolve(isThereAnyMarkDown(route))
       } else {
-        reject('soy un archivo')
+        console.log('Soy un archivo')
+        resolve(markDownFile(route))
       }
     })
   })
   return isDirectoryOrFilePromise
 }
 
+/* Evaluar si la ruta fue directo a un archivo .md*/
+function markDownFile(route){
+  const markDownFilePromise = new Promise(function(resolve, reject){
+    console.log('3', mdFiles)
+    const fileName = path.basename(route)
+    if(path.extname(fileName) == '.md'){
+      mdFiles.push(fileName)
+    }
+
+    if(mdFiles.length >= 1){
+      console.log('la ruta fue a un archivo mark down: ' + mdFiles)
+      resolve(findLinks(mdFiles))
+    } else {
+      reject('la ruta fue a un archivo que no es mark down')
+    }
+  })
+  return markDownFilePromise
+}
 
 /* Buscar los archivos .md en un directorio*/
-function isMarkDown(route){
-  const isMarkDownPromise = new Promise(function(resolve, reject){
+function isThereAnyMarkDown(route){
+  const isThereAnyMarkDownPromise = new Promise(function(resolve, reject){
     console.log('3', mdFiles)
     fs.readdir(route, (e, data) => {
       data?.forEach(item => {
@@ -56,15 +75,15 @@ function isMarkDown(route){
       }
     })
   })
-  return isMarkDownPromise
+  return isThereAnyMarkDownPromise
 }
-
 
 /* Leer archivos */
 function findLinks(mdFilesList) {
-  console.log('4')
+  console.log('4: ' + mdFilesList)
   const findLinksPromise = new Promise(function(resolve, reject){
     mdFilesList.forEach(file => {
+      /* hacer caso de uso para cuando viene de un archivo directo, porque la url viene /archivo.md/archivo.md */
       fs.readFile(path.resolve(route, file), "utf8", (e, data) => {
         const links = data.match(reExp)
         if(links){
@@ -72,14 +91,15 @@ function findLinks(mdFilesList) {
             const linkArray = link.split(']')
             const linkName = linkArray[0].substring(1)
             const linkUrl = linkArray[1].substring(1, linkArray[1].length - 1)
+            const linkR = path.resolve(route, file).replace('\\\\', '\\')
             const linkObject = {
               name: linkName,
-              url: linkUrl
+              url: linkUrl,
+              linkRoute: linkR,
             }
             return linkObject
           })
           resolve(response)
-          //resolve(`los links son: ${links}`)
         } else {
           reject('no hay links')
         }
@@ -89,13 +109,12 @@ function findLinks(mdFilesList) {
   return findLinksPromise
 }
 
+/* funcion validar link */
 function getValidate(links){
   const getValidatePromise = new Promise(function(resolve, reject){
     const res = links.map(link => {
-      /* funcion validar link */
       return axios.get(link.url)
         .then(function (response) {
-          // handle success
           return{
             ...link,
             valid: {
@@ -105,7 +124,6 @@ function getValidate(links){
           }
         })
         .catch(function (error) {
-          // handle error
           return {
             ...link,
             valid: {
@@ -120,6 +138,7 @@ function getValidate(links){
         return {
           name: link.value.name,
           url: link.value.url,
+          linkRoute: link.value.linkRoute,
           valid: {...link.value.valid}
         }
       }))
@@ -129,7 +148,7 @@ function getValidate(links){
   return getValidatePromise
 }
 
-export function inicial(route, validateUrl){
+function inicial(route, validateUrl){
   isRouteValid(route).then(links => {
     if(!validateUrl){
       return console.log(links)
@@ -140,4 +159,4 @@ export function inicial(route, validateUrl){
   }).finally(() => console.log('Fin de la ejecución'))
 }
 
-inicial(route, true)
+inicial(route, false)
