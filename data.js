@@ -35,16 +35,16 @@ const getLinksFromMdFiles = (mdFiles) => new Promise((resolve, reject) => {
 const isValidURL = links => {
     const linkitos = Array.isArray(links) ? links : [links]
     const promises = linkitos.map(link => {
-        return fetch(link).then(result => {
+        return fetch(link.link).then(result => {
             if(result.status < 400){
                 return { link, isValid: true}
             } else {
-                return { link, isValid: true}
-            }            
+                return { link, isValid: false}
+            }
         }).catch(err => {
             return { link, isValid: false}
         })
-        })
+    })
     return Promise.all(promises)
 }
 
@@ -88,9 +88,13 @@ const totalLinks = (links) => {
 }
 
 /* cantidad de links rotos */
-const totalBrokenLinks = (links) => links.flat().filter((link)=> link.isValid === false)
+const totalBrokenLinks = (links) => {
+    return links.filter((link)=> {
+        return link.isValid === false
+    }).length
+}
 
 /* cantidad de links válidos */
-const totalValidLinks = (links) => links.flat().filter((link)=> link.isValid)
+const totalValidLinks = (links) => links.filter((link)=> link.isValid).length
 
 module.exports = { getAllFilesRecursive, getLinksFromMdFiles, isValidURL, validateFlag, statsFlag, totalLinks, totalBrokenLinks, totalValidLinks };

@@ -1,6 +1,10 @@
 {
   "name": "md-links",
   "version": "0.1.0",
+  "scripts": {
+    "test": "jest --verbose --coverage",
+    "start": "serve src/"
+  },
   "engines": {
     "node": ">=16.x"
   },
@@ -12,5 +16,8 @@
   "dependencies": {
     "is-valid-path": "^0.1.1",
     "markdown-link-extractor": "^3.1.0"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1"
   }
 }
