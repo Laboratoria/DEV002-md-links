@@ -1,23 +1,25 @@
 {
   "name": "md-links",
   "version": "0.1.0",
+  "description": "md links validator",
+  "author": "filletournesols",
+  "module": "index.mjs",
+  "source": "index.js",
   "scripts": {
     "test": "jest --verbose --coverage",
+    "build": "microbundle",
     "start": "serve src/"
   },
   "engines": {
     "node": ">=16.x"
-  },
-  "bootcamp": {
-    "createdAt": "2022-11-30T13:40:29.636Z",
-    "version": "5.5.0",
-    "commit": "51e941edf1cc991930aefd7dd9c406a7c43741c1"
   },
   "dependencies": {
     "is-valid-path": "^0.1.1",
     "markdown-link-extractor": "^3.1.0"
   },
   "devDependencies": {
-    "jest": "^29.3.1"
-  }
+    "jest": "^29.3.1",
+    "microbundle": "^0.15.1"
+  },
+  "files": ["index.js", "data.js", "mdLinks.js", "package.json", "README.md"]
 }

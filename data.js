@@ -97,4 +97,4 @@ const totalBrokenLinks = (links) => {
 /* cantidad de links válidos */
 const totalValidLinks = (links) => links.filter((link)=> link.isValid).length
 
-module.exports = { getAllFilesRecursive, getLinksFromMdFiles, isValidURL, validateFlag, statsFlag, totalLinks, totalBrokenLinks, totalValidLinks };
+module.exports = { getAllFilesRecursive, getLinksFromMdFiles, isValidURL, validateFlag, statsFlag, totalLinks, totalBrokenLinks, totalValidLinks, readFileFun, getLinksFromMdFile };
