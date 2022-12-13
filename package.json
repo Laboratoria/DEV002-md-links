@@ -9,7 +9,11 @@
     "version": "5.5.0",
     "commit": "51e941edf1cc991930aefd7dd9c406a7c43741c1"
   },
+  "bin": {
+    "md-link": "./mdlink.js"
+  },
   "dependencies": {
+    "esm": "^3.2.25",
     "line-reader": "^0.4.0"
   },
   "devDependencies": {
