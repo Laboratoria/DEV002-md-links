@@ -8,7 +8,6 @@ const mdFiles = [];
 /* Evaluar si la ruta es o no valida */
 function isRouteValid(route) {
   const isRouteValidPromise = new Promise(function (resolve, reject) {
-    console.log("1", mdFiles);
     fs.access(route, (e) => {
       if (e) {
         reject(false);
@@ -23,7 +22,6 @@ function isRouteValid(route) {
 /* Validar si es o no un directorio*/
 function isDirectoryOrFile(route) {
   const isDirectoryOrFilePromise = new Promise(function (resolve, reject) {
-    console.log("2", mdFiles);
     fs.stat(route, (e, data) => {
       if (data.isDirectory()) {
         resolve("directory");
@@ -54,34 +52,24 @@ function markDownFile(route) {
 
 /* Buscar los archivos .md en un directorio*/
 function isThereAnyMarkDown(route) {
-  const isThereAnyMarkDownPromise = new Promise(function (resolve, reject) {
-    const res = [];
+  return new Promise(function (resolve, reject) {
     fs.readdir(route, (e, data) => {
-      data?.forEach((item) => {
-        /* agregar recursividad en dir */
-        if (path.extname(item) == ".md") {
-          mdFiles.push(item);
-        } else {
-          const newPath = path.resolve(route, item);
-          const isDirOrFile = isDirectoryOrFile(newPath);
-          if (isDirOrFile) {
-            res.push(
-              Promise.allSettled([isThereAnyMarkDown(newPath)]).then((item) =>
-                console.log(item)
-              )
-            );
-          }
-        }
-      });
-      if (mdFiles.length >= 1) {
-        resolve(res);
-      } else {
-        reject(false);
-      }
+      Promise.all(data.map(fileOrDirectory => {
+        return new Promise((resolve, reject) => {
+          const statPath = path.join(route, fileOrDirectory)
+          fs.lstat(statPath, (e, stat) => {
+            if(stat.isDirectory()){
+              return isThereAnyMarkDown(statPath).then(resolve)
+            }
+            resolve([statPath])
+          })
+        })
+      })).then(results => {
+        return results.reduce((all, x) => all.concat(...x), [])
+      }).then(resolve).catch(reject)
     });
-  });
-  return isThereAnyMarkDownPromise;
-}
+  }
+)}
 
 function findLinksFiles(mdFilesList, isFile = false) {
   const findLinksFilesPromise = new Promise(function (resolve, reject) {
@@ -92,7 +80,7 @@ function findLinksFiles(mdFilesList, isFile = false) {
       const res = Promise.allSettled(linksArray).then((links) =>
         links.flatMap((linkArray) => {
           const linkObjects = [];
-          linkArray.value.forEach((link) => linkObjects.push(link));
+          linkArray?.value?.forEach((link) => linkObjects.push(link));
           return linkObjects;
         })
       );
@@ -107,7 +95,7 @@ function findLinks(file, isFile = false) {
   const findLinksPromise = new Promise(function (resolve, reject) {
     const pathResolve = isFile
       ? path.resolve(route)
-      : path.resolve(route, file);
+      : file
 
     fs.readFile(pathResolve, "utf8", (e, data) => {
       const links = data.match(reExp);
@@ -182,15 +170,14 @@ function inicial(route, validateUrl) {
         isDirectoryOrFile(route).then((directoryOrFile) => {
           if (directoryOrFile === "directory") {
             isThereAnyMarkDown(route).then((isThereMarkdown) => {
-              console.log(isThereMarkdown, "mdkdjnfg");
-              findLinksFiles(mdFiles).then((linkObject) => {
+              findLinksFiles(isThereMarkdown).then((linkObject) => {
                 if (!validateUrl) {
                   return console.log(linkObject);
                 }
                 getValidate(linkObject).then((linkArray) =>
                   console.log(linkArray)
                 );
-              });
+              }).catch(console.log)
             });
           } else {
             markDownFile(route).then((isThereMarkdown) => {
@@ -210,7 +197,6 @@ function inicial(route, validateUrl) {
     .catch((error) => {
       console.log(error);
     })
-    .finally(() => console.log("Fin de la ejecución"));
 }
 
 inicial(route);
