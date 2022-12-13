@@ -2,52 +2,44 @@ import fetch from "node-fetch";
 import fs, { link } from "fs";
 import path from "path";
 
+const file_no = "md_files/no_md_file.txt";
 const file = "md_files/file_1.md";
 
-// path.extname(file, "utf-8", (error, extname) => {
-//     if (!error) {
-//         console.log(extname);
-//     } else {
-//         console.log("Error: ${error}");
-//     }
-// });
+// console.log(path.extname(file_no));
 
-// const links = fs.readFile(file, "utf-8", (error, data) => {
-//     if (!error) {
-//         data;
-//     } else {
-//         "Error: ${error}";
-//     }
-// })
-const getExtePromise = (file) => {
-    return new Promise((res, rej) => {
-        path.extname(file, "utf-8", (error, extName) => {
+const isMdExtPromise = (file) => {
+    return new Promise((resolve, reject) => {
+        if(path.extname(file)===".md") {
+            resolve(file);
+        } else {
+            reject ("El archivo no es compatible con la búsqueda");
+        }
+    })
+}
+
+const readFilePromise = (file) => {
+    return new Promise((resolve, reject) => {
+        fs.readFile(file, "utf-8", (error, data) => {
             if (!error) {
-                if (extName == ".md")
-                    true;
+                resolve(data);
             } else {
-                rej("El archivo no es compatible par la búsqueda");
+                reject("No se encuentran elementos válidos en el file");
             }
         })
     })
 }
 
-const readFilePromise = (file) => {
-        return new Promise((res, rej) => {
-            fs.readFile(file, "utf-8", (error, data) => {
-                if (!error) {
-                    res(data);
-                } else {
-                    rej("No se encuentran elementos válidos en el file");
-                }
-            })
-        })
-    }
+// readFilePromise(file)
+//     .then((link) => fetch(link))
+//     .then((data) => data.json())
+//     .then((json) => console.log(json));
 
-    readFilePromise(file)
-        .then((link) => fetch(link))
-        .then((data) => data.json())
-        .then((json) => console.log(json));
+isMdExtPromise(file)
+    .then((mdFile) => readFilePromise(mdFile))
+    .then((link) => fetch(link))
+    .then((data) => data.json())
+    .then((json) => console.log(json))
+    .catch((error) => console.log("ERROR: ", error));
 
 // const link = "https://pokeapi.co/api/v2/pokemon"
 // fetch(link)

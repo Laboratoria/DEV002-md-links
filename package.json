@@ -9,8 +9,18 @@
     "version": "5.5.0",
     "commit": "51e941edf1cc991930aefd7dd9c406a7c43741c1"
   },
+  "scripts": {
+    "build": "babel index.js -d dist",
+     "start": "babel-node index.js, md_links.js"
+   },
   "type": "module",
   "dependencies": {
     "node-fetch": "^3.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/node": "^7.20.5",
+    "@babel/preset-env": "^7.20.2"
   }
 }
