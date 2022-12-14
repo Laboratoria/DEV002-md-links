@@ -11,10 +11,10 @@
   },
   "scripts": {
     "build": "babel index.js -d dist",
-     "start": "babel-node index.js, md_links.js"
-   },
-  "type": "module",
+    "start": "babel-node index.js, md_links.js"
+  },
   "dependencies": {
+    "cross-fetch": "^3.1.5",
     "node-fetch": "^3.3.0"
   },
   "devDependencies": {

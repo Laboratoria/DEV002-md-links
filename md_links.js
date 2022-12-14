@@ -1,11 +1,7 @@
-import fetch from "node-fetch";
-import fs, { link } from "fs";
-import path from "path";
+const fs = require("fs")
+const path = require("path")
 
 const entryPath = "md_files/file_1.md";
-
-// console.log(path.extname(file_no));
-// console.log(path.isAbsolute(file));
 
 const validatePathPromise = (entryPath) => {
     return new Promise((resolve, reject) => {
@@ -73,6 +69,7 @@ getAbsolutePathPromise(entryPath)
 // fetch(link)
 //     .then((res) => res.json())
 //     .then((data) => console.log(data["results"][0]["name"]))
+//     .catch((error) => console.log("ERROR: ", error));
 
 
 
