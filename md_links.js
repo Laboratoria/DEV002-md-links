@@ -2,17 +2,35 @@ import fetch from "node-fetch";
 import fs, { link } from "fs";
 import path from "path";
 
-const file_no = "md_files/no_md_file.txt";
-const file = "md_files/file_1.md";
+const entryPath = "md_files/file_1.md";
 
 // console.log(path.extname(file_no));
+// console.log(path.isAbsolute(file));
+
+const validatePathPromise = (entryPath) => {
+    return new Promise((resolve, reject) => {
+        fs.access(entryPath, (error, _) => {
+            if (!error) {
+                resolve(entryPath);
+            } else {
+                reject("ERROR: La ruta " + entryPath + " no es válida");
+            }
+        })
+    })
+}
+
+const getAbsolutePathPromise = (file) => {
+    return new Promise((resolve, _) => {
+        resolve(path.resolve(file));
+    })
+}
 
 const isMdExtPromise = (file) => {
     return new Promise((resolve, reject) => {
-        if(path.extname(file)===".md") {
+        if (path.extname(file) === ".md") {
             resolve(file);
         } else {
-            reject ("El archivo no es compatible con la búsqueda");
+            reject("El archivo no es compatible con la búsqueda");
         }
     })
 }
@@ -32,14 +50,24 @@ const readFilePromise = (file) => {
 // readFilePromise(file)
 //     .then((link) => fetch(link))
 //     .then((data) => data.json())
-//     .then((json) => console.log(json));
+//     .then((json) => console.log(json))
+//     .catch((error) => console.log("ERROR: ", error));
 
-isMdExtPromise(file)
+getAbsolutePathPromise(entryPath)
+    .then((absolutePath) => validatePathPromise(absolutePath))
+    .then((validatedPath) => isMdExtPromise(validatedPath))
     .then((mdFile) => readFilePromise(mdFile))
     .then((link) => fetch(link))
     .then((data) => data.json())
     .then((json) => console.log(json))
     .catch((error) => console.log("ERROR: ", error));
+
+// isMdExtPromise(file)
+//     .then((mdFile) => readFilePromise(mdFile))
+//     .then((link) => fetch(link))
+//     .then((data) => data.json())
+//     .then((json) => console.log(json))
+//     .catch((error) => console.log("ERROR: ", error));
 
 // const link = "https://pokeapi.co/api/v2/pokemon"
 // fetch(link)
