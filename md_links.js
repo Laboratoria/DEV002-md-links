@@ -1,7 +1,8 @@
-const fs = require("fs")
+const fs = require("fs");
+const { resolve } = require("path");
 const path = require("path")
 
-const entryPath = "md_files/file_1.md";
+const entryPath = "README.md";
 
 const validatePathPromise = (entryPath) => {
     return new Promise((resolve, reject) => {
@@ -43,20 +44,46 @@ const readFilePromise = (file) => {
     })
 }
 
+const getLinks = (entryPath) => {
+    return new Promise((resolve, reject) => {
+        fs.readFile(entryPath, "utf-8", (error, data) => {
+            const regularExpression = /\[([^[]+)\](\(.*\))/gm;
+            if (data.match(regularExpression)) {
+                const arrayLinks = data.match(regularExpression);
+                const link = arrayLinks.map((item) => {
+                    const textURLsplit = item.split("](");
+                    const text = textURLsplit[0].replace("[", "").substring(0, 50);
+                    const href = textURLsplit[1].replace(")", "");
+                    return ({ href, text, entryPath });
+                });
+                const michi = "#";
+                const linksURL = link.filter((object) => !object.href.startsWith(michi));
+                resolve(linksURL);
+            } else {
+                resolve([]);
+            }
+        })
+    })
+}
+
+getLinks(entryPath)
+.then((link) => console.log(link))
+.catch((error) => console.log("ERROR: ", error));
+
 // readFilePromise(file)
 //     .then((link) => fetch(link))
 //     .then((data) => data.json())
 //     .then((json) => console.log(json))
 //     .catch((error) => console.log("ERROR: ", error));
 
-getAbsolutePathPromise(entryPath)
-    .then((absolutePath) => validatePathPromise(absolutePath))
-    .then((validatedPath) => isMdExtPromise(validatedPath))
-    .then((mdFile) => readFilePromise(mdFile))
-    .then((link) => fetch(link))
-    .then((data) => data.json())
-    .then((json) => console.log(json))
-    .catch((error) => console.log("ERROR: ", error));
+// getAbsolutePathPromise(entryPath)
+//     .then((absolutePath) => validatePathPromise(absolutePath))
+//     .then((validatedPath) => isMdExtPromise(validatedPath))
+//     .then((mdFile) => readFilePromise(mdFile))
+//     .then((link) => fetch(link))
+//     .then((data) => data.json())
+//     .then((json) => console.log(json))
+//     .catch((error) => console.log("ERROR: ", error));
 
 // isMdExtPromise(file)
 //     .then((mdFile) => readFilePromise(mdFile))
