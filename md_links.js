@@ -56,9 +56,9 @@ const getLinks = (entryPath) => {
                     const href = textURLsplit[1].replace(")", "");
                     return ({ href, text, entryPath });
                 });
-                const michi = "#";
-                const linksURL = link.filter((object) => !object.href.startsWith(michi));
-                resolve(linksURL);
+                const crossReference = "#";
+                const justLinksURL = link.filter((object) => !object.href.startsWith(crossReference));
+                resolve(justLinksURL);
             } else {
                 resolve([]);
             }
