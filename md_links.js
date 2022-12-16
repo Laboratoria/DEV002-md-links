@@ -2,7 +2,7 @@ const fs = require("fs");
 const { resolve } = require("path");
 const path = require("path")
 
-const entryPath = "/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files";
+const entryPath = ['file_1.md', 'file_1.txt', 'preambulo.md'];
 
 const getAbsolutePath = (entryPath) => {
     return (path.resolve(entryPath));
@@ -21,62 +21,76 @@ const accessAndValidatePathPromise = (entryPath) => {
     })
 } //("function")
 
-const isMdExtPromise = (entryPath) => {
+// const isMdExtPromise = (entryPath) => {
+//     return new Promise((resolve, reject) => {
+//         if (path.extname(entryPath) === ".md") {
+//             resolve(entryPath);
+//         } else {
+//             reject("El archivo no es compatible con la búsqueda");
+//         }
+//     })
+// }
+
+const searchMdFilesPromise = (arrayOfFiles) => {
     return new Promise((resolve, reject) => {
-        if (path.extname(entryPath) === ".md") {
-            resolve(entryPath);
+        const mdFilesArray = arrayOfFiles.filter((mdFile) => path.extname(mdFile) === ".md")
+        if (!mdFilesArray.length == 0) {
+            resolve(mdFilesArray);
         } else {
-            reject("El archivo no es compatible con la búsqueda");
+            reject("No se encuentran archivos markdown");
         }
     })
 }
 
-const readContDirSync = (entryPath) => {
-    fs.readdirSync(entryPath, "utf-8", (error, data) => {
-        if (!error) {
-            resolve(data);
-        } else {
-            reject("No se encuentran elementos en el directorio");
-        }
-    })
-}
-fs.readdirSync(entryPath).forEach(file => {
-    console.log(file);
-  });
+console.log(searchMdFilesPromise(['file_1.md', 'file_1.txt', 'preambulo.md']));
 
-    const readFilePromise = (entryPath) => {
-        return new Promise((resolve, reject) => {
-            fs.readFile(entryPath, "utf-8", (error, data) => {
-                if (!error) {
-                    resolve(data);
-                } else {
-                    reject("No se encuentran elementos válidos en el file");
-                }
-            })
-        })
-    }
+// const readContDirSync = (entryPath) => {
+//     fs.readdirSync(entryPath, "utf-8", (error, data) => {
+//         if (!error) {
+//             resolve(data);
+//         } else {
+//             reject("No se encuentran elementos en el directorio");
+//         }
+//     })
+// }
 
-    const getLinks = (entryPath) => {
-        return new Promise((resolve, reject) => {
-            fs.readFile(entryPath, "utf-8", (error, data) => {
-                const regularExpression = /\[([^[]+)\](\(.*\))/gm;
-                if (data.match(regularExpression)) {
-                    const arrayLinks = data.match(regularExpression);
-                    const link = arrayLinks.map((item) => {
-                        const textURLsplit = item.split("](");
-                        const text = textURLsplit[0].replace("[", "").substring(0, 50);
-                        const href = textURLsplit[1].replace(")", "");
-                        return ({ href, text, entryPath });
-                    });
-                    const crossReference = "#";
-                    const justLinksURL = link.filter((object) => !object.href.startsWith(crossReference));
-                    resolve(justLinksURL);
-                } else {
-                    resolve([]);
-                }
-            })
-        })
-    }
+// const readDir = (fs.readdirSync(entryPath, { withFileTypes: true })
+//     .filter(item => !item.isDirectory())
+//     .map(item => item.name));
+
+// const readFilePromise = (entryPath) => {
+//     return new Promise((resolve, reject) => {
+//         fs.readFile(entryPath, "utf-8", (error, data) => {
+//             if (!error) {
+//                 resolve(data);
+//             } else {
+//                 reject("No se encuentran elementos válidos en el file");
+//             }
+//         })
+//     })
+// }
+
+// const getLinks = (entryPath) => {
+//     return new Promise((resolve, reject) => {
+//         fs.readFile(entryPath, "utf-8", (error, data) => {
+//             const regularExpression = /\[([^[]+)\](\(.*\))/gm;
+//             if (data.match(regularExpression)) {
+//                 const arrayLinks = data.match(regularExpression);
+//                 const link = arrayLinks.map((item) => {
+//                     const textURLsplit = item.split("](");
+//                     const text = textURLsplit[0].replace("[", "").substring(0, 50);
+//                     const href = textURLsplit[1].replace(")", "");
+//                     return ({ href, text, entryPath });
+//                 });
+//                 const crossReference = "#";
+//                 const justLinksURL = link.filter((object) => !object.href.startsWith(crossReference));
+//                 resolve(justLinksURL);
+//             } else {
+//                 resolve([]);
+//             }
+//         })
+//     })
+// }
 
 // getAbsolutePathPromise(entryPath)
 //     .then((absolutePath) => readContDirSync(absolutePath))
