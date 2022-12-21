@@ -1,11 +1,12 @@
 const fs = require("fs");
 const { resolve } = require("path");
-const path = require("path")
+const path = require("path");
+const { default: fetch } = require("cross-fetch");
 
 const entryPath = "md_files";
 const arrayMdFiles = [];
 
-const getAbsolutePath = (entryPath) => {
+let getAbsolutePath = (entryPath) => {
     return (path.resolve(entryPath));
 }
 //("function")
@@ -21,34 +22,9 @@ const isAValidatePathPromise = (entryPath) => {
             }
         })
     })
-} //("function")
-
-// isAValidatePathPromise(entryPath)
-//     .then((validPath) => console.log(validPath))
-//     .catch((error) => console.log("ERROR: ", error));
-//-APROBADO-----------
-
-function readDirSyncrono(entryPath) {
-    return (fs.readdirSync(entryPath, { withFileTypes: true })
-        .filter(item => !item.isDirectory())
-        .map(item => entryPath + "/" + item.name));
 }
 
-// isAValidatePathPromise(entryPath)
-//     .then((validPath) => readDirSyncrono(validPath))
-//     .then((arrayDirectorio) => console.log(arrayDirectorio))
-//     .catch((error) => console.log("ERROR: ", error));
 //-APROBADO-----------
-
-
-const searchMdFiles = (arrayOfFiles) => {
-    const mdFilesArray = arrayOfFiles.filter((mdFile) => path.extname(mdFile) === ".md");
-    if (!mdFilesArray.length == 0) {
-        return mdFilesArray;
-    } else {
-        return ("No se encuentran archivos markdown");
-    }
-}
 
 function getMdFilesFromPath(entryPath, arrayMdFiles) {
     let childrenFolders = fs.readdirSync(entryPath, { withFileTypes: true })
@@ -69,34 +45,12 @@ function getMdFilesFromPath(entryPath, arrayMdFiles) {
         return childrenMdFiles.concat(arrayMdFiles);
     }
 }
-console.log(getMdFilesFromPath(entryPath, arrayMdFiles));
-
-const searchMdFilesPromise = (arrayOfFiles) => {
-    return new Promise((resolve, reject) => {
-        const mdFilesArray = arrayOfFiles.filter((mdFile) => path.extname(mdFile) === ".md");
-        if (!mdFilesArray.length == 0) {
-            resolve(mdFilesArray);
-        } else {
-            reject("No se encuentran archivos markdown");
-        }
-    })
-}
-
-// isAValidatePathPromise(entryPath)
-//     .then((validPath) => readDir(validPath))
-//     .then((arrayDirectorio) => searchMdFilesPromise(arrayDirectorio))
-//     .then((mdFilesArray) => console.log(mdFilesArray)) 
-//     .catch((error) => console.log("ERROR: ", error));
-//-APROBADO-----------
-
-///Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/file_1.md
-///Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/file_1.md
+// APROBADO ---console.log(getMdFilesFromPath(entryPath, arrayMdFiles));
 
 //Promesa que extrae los links de un archivo .md y los acumula en un arreglo.
-const getLinksFromMdFile = (entryFile, links) => {
+const getLinksFromMdFile = (entryMdFile, links) => {
     return new Promise((resolve, reject) => {
-        console.log(entryFile);
-        fs.readFile(entryFile, "utf-8", (error, data) => {
+        fs.readFile(entryMdFile, "utf-8", (error, data) => {
             if (error) {
                 reject("ERROR: " + error);
             }
@@ -107,7 +61,7 @@ const getLinksFromMdFile = (entryFile, links) => {
                     const textURLsplit = item.split("](");
                     const text = textURLsplit[0].replace("[", "").substring(0, 50);
                     const href = textURLsplit[1].replace(")", "");
-                    return ({ href, text, entryFile });
+                    return ({ href, text, entryMdFile });
                 });
                 const crossReference = "#";
                 const justLinksURL = link.filter((object) => !object.href.startsWith(crossReference));
@@ -118,15 +72,12 @@ const getLinksFromMdFile = (entryFile, links) => {
         })
     })
 }
-
+// getLinksFromMdFile("preambulo.md", [])
+// .then(res => console.log(res))
+// .catch(error => console.log(error));
 //Promesa que extrae los links de un arreglo de archivos (arrayFiles) .md y los acumula en un arreglo (arrayLinks).
 const getLinksFromArrayFiles = (arrayFiles, arrayLinks) => {
     return new Promise((resolve, reject) => {
-        /*if (arrayFiles.length === 0) {
-            resolve(arrayLinks)
-        } else {
-           
-        }*/
         if (arrayFiles.length == 0) {
             resolve(arrayLinks);
         } else {
@@ -137,54 +88,25 @@ const getLinksFromArrayFiles = (arrayFiles, arrayLinks) => {
     })
 }
 
-// const getLinksFromFiles = (filesArray) => {
-//     return new Promise((resolve, reject) => {
-//         const linksResponse = [];
-//         filesArray.forEach(element => {
-//             getLinks(getAbsolutePath(element))
-//                 .then((links) => linksResponse.concat(links))
-//                 .then((links) => resolve(links));
-//         });
-//         //resolve(linksResponse);
-//     })
+//Promesa que revisa si los links funcionan o no - HTTP request
+
 // }
-
-// isAValidatePathPromise(entryPath)
-//     .then((validPath) => readDirSyncrono(validPath))
-//     .then((arrayDirectorio) => searchMdFilesPromise(arrayDirectorio))
-//     .then((mdFilesArray) => getLinksFromArrayFiles(mdFilesArray, []))
-//     .then((links) => console.log(links))
-//     .catch((error) => console.log("ERROR: ", error));
-//-APROBADO-----------
-
-// isAValidatePathPromise(entryPath)
-//     .then((mdFilesArray) => getLinks(mdFilesArray))
-//     .then((links) => console.log(links))
-//     .catch((error) => console.log("ERROR: ", error));
-//-APROBADO-----------
-
-// const isMdExtPromise = (entryPath) => {
-//     return new Promise((resolve, reject) => {
-//         if (path.extname(entryPath) === ".md") {
-//             resolve(entryPath);
-//         } else {
-//             reject("El archivo no es compatible con la búsqueda");
-//         }
-//     })
-// }
-
-// readFilePromise(file)
-//     .then((link) => fetch(link))
-//     .then((data) => data.json())
-//     .then((json) => console.log(json))
-//     .catch((error) => console.log("ERROR: ", error)); 
-
-// accessAndValidatePathPromise(entryPath)
-//     .then((absolutePath) => readDirSyncrono(absolutePath))
-//     .then((mdFile) => searchMdFilesPromise(mdFile))
-//     .then((link) => getLinks(link))
-//     .then((toShowLinks) => console.log(toShowLinks))
-//     .catch((error) => console.log("ERROR: ", error));
+fetch("https://nodejs.org/")
+    .then(res => res)
+        .then((data) => {
+            valid = {
+                "HTTP request": " " + data.status
+            }
+            if(data.status >= 200 && data.status <= 399) {
+                console.log(valid);
+            }
+            if(data.status >= 400 && data.status <= 499) {
+                console.log(valid);
+            }
+        })
+        .catch(() => {
+            console.error("ERROOOOOORRRRRR")
+        })
 
 
 
