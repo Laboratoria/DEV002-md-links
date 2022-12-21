@@ -9,22 +9,25 @@ const arrayMdFiles = [];
 let getAbsolutePath = (entryPath) => {
     return (path.resolve(entryPath));
 }
-//("function")
 
 const isAValidatePathPromise = (entryPath) => {
-    return new Promise((resolve, reject) => {
-        const absolutePath = getAbsolutePath(entryPath);
-        fs.access(absolutePath, (error, _) => {
-            if (!error) {
-                resolve(absolutePath);
-            } else {
-                reject("ERROR: La ruta " + entryPath + " no es válida");
-            }
-        })
+    const absolutePath = getAbsolutePath(entryPath);
+    fs.access(absolutePath, (error, _) => {
+        if (!error) {
+            return (absolutePath);
+        } else {
+            return ("ERROR: La ruta " + entryPath + " no es válida");
+        }
     })
 }
 
-//-APROBADO-----------
+function isMdFilesPath(entryPath) {
+    if (path.extname(entryPath) === ".md") {
+        getLinksFromMdFilePromise(entryPath)
+    } else {
+        getMdFilesFromPath(entryPath, []);
+    }
+}
 
 function getMdFilesFromPath(entryPath, arrayMdFiles) {
     let childrenFolders = fs.readdirSync(entryPath, { withFileTypes: true })
@@ -39,16 +42,14 @@ function getMdFilesFromPath(entryPath, arrayMdFiles) {
         return arrayMdFiles.concat(childrenMdFiles);
     } else {
         childrenFolders.forEach((childFolder) => {
-            console.log(childFolder);
             arrayMdFiles = getMdFilesFromPath(childFolder, arrayMdFiles);
         })
         return childrenMdFiles.concat(arrayMdFiles);
     }
 }
-// APROBADO ---console.log(getMdFilesFromPath(entryPath, arrayMdFiles));
 
 //Promesa que extrae los links de un archivo .md y los acumula en un arreglo.
-const getLinksFromMdFile = (entryMdFile, links) => {
+const getLinksFromMdFilePromise = (entryMdFile) => {
     return new Promise((resolve, reject) => {
         fs.readFile(entryMdFile, "utf-8", (error, data) => {
             if (error) {
@@ -65,48 +66,93 @@ const getLinksFromMdFile = (entryMdFile, links) => {
                 });
                 const crossReference = "#";
                 const justLinksURL = link.filter((object) => !object.href.startsWith(crossReference));
-                resolve(links.concat(justLinksURL));
+                resolve(justLinksURL);
             } else {
-                resolve(links);
+                resolve([]);
             }
         })
     })
 }
-// getLinksFromMdFile("preambulo.md", [])
-// .then(res => console.log(res))
-// .catch(error => console.log(error));
-//Promesa que extrae los links de un arreglo de archivos (arrayFiles) .md y los acumula en un arreglo (arrayLinks).
-const getLinksFromArrayFiles = (arrayFiles, arrayLinks) => {
+
+//Promesa que extrae los links de un arreglo de archivos .md (arrayFiles) y los acumula en un arreglo (arrayLinks).
+const getLinksFromMdFilesPromise = (arrayMdFiles, accLinks) => {
     return new Promise((resolve, reject) => {
-        if (arrayFiles.length == 0) {
-            resolve(arrayLinks);
+        if (arrayMdFiles.length == 0) {
+            resolve(accLinks);
         } else {
-            const head = arrayFiles.shift();
-            resolve(getLinksFromMdFile(head, arrayLinks)
-                .then((links) => getLinksFromArrayFiles(arrayFiles, arrayLinks.concat(links))));
+            const head = arrayMdFiles.shift();
+            resolve(getLinksFromMdFilePromise(head)
+                .then((links) => getLinksFromMdFilesPromise(arrayMdFiles, accLinks.concat(links))));
         }
     })
 }
 
-//Promesa que revisa si los links funcionan o no - HTTP request
+//Promesa que revisa si un link funciona o no - HTTP request
+const validateLink = (objectDefaultResponse) => {
+    return new Promise((resolve, reject) => {
+        fetch(objectDefaultResponse.href)
+            .then((response) => {
+                if (response.ok) {
+                    bodyResponse = {
+                        "status": response.status,
+                        "message": "Ok",
+                        "href": objectDefaultResponse.href,
+                        "text": objectDefaultResponse.text,
+                        "file": objectDefaultResponse.entryMdFile
+                    }
+                } else {
+                    bodyResponse = {
+                        "status": response.status,
+                        "message": "Fail",
+                        "href": objectDefaultResponse.href,
+                        "text": objectDefaultResponse.text,
+                        "file": objectDefaultResponse.entryMdFile
+                    }
+                }
+                resolve(bodyResponse);
+            })
+            .catch(() => {
+                bodyResponse = {
+                    "message": "Link is not valid",
+                    "href": objectDefaultResponse.href,
+                    "text": objectDefaultResponse.text,
+                    "file": objectDefaultResponse.entryMdFile
+                }
+                resolve(bodyResponse);
+            })
+    })
+}
 
-// }
-fetch("https://nodejs.org/")
-    .then(res => res)
-        .then((data) => {
-            valid = {
-                "HTTP request": " " + data.status
-            }
-            if(data.status >= 200 && data.status <= 399) {
-                console.log(valid);
-            }
-            if(data.status >= 400 && data.status <= 499) {
-                console.log(valid);
-            }
-        })
-        .catch(() => {
-            console.error("ERROOOOOORRRRRR")
-        })
+//Promesa que revisa si los links de un array funcionan o no - HTTP request
+const validateArrayLinks = (arrayObjects, arrayBodyResponses) => {
+    return new Promise((resolve, reject) => {
+        if (arrayObjects.length == 1) {
+            resolve(validateLink(arrayObjects[0])
+                .then((bodyResponse) => {
+                    arrayBodyResponses.push(bodyResponse);
+                    return arrayBodyResponses;
+                }))
+        } else {
+            let head = arrayObjects.shift();
+            resolve(validateLink(head)
+                .then((headBodyResponse) => {
+                    arrayBodyResponses.push(headBodyResponse);
+                    return validateArrayLinks(arrayObjects, arrayBodyResponses);
+                }))
+        }
+    })
+}
 
+const arrayPrueba = ["https://reqres.in/api/users/23", "https://reqres.in/api/users/2", "https://reqres.in/api/users/23"]
+const arrayMds = getMdFilesFromPath("/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/file_1.md", [])
 
+getLinksFromMdFilesPromise(arrayMds, [])
+    .then((arrayLinks) => validateArrayLinks(arrayLinks, []))
+    .then((res) => console.log(res));
 
+module.exports = {
+    getAbsolutePath,
+    getMdFilesFromPath,
+    getLinksFromMdFile: getLinksFromMdFilePromise,
+    getLinksFromArrayFiles: getLinksFromMdFilesPromise
+}
