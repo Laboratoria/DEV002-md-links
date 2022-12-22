@@ -1,0 +1,12 @@
+ [ ] **Módulos de CommonJS**
+
+  <details><summary>Links</summary><p>
+
+  * [Modules: CommonJS modules - Node.js Docs](https://nodejs.org/docs/latest/api/modules.html)
+</p></details>
+
+- [ ] **Diferenciar entre expresiones (expressions) y sentencias (statements)**
+
+- [ ] **Callbacks**
+
+  <details><summary>Links</summary><p>

@@ -3,23 +3,24 @@ const { resolve } = require("path");
 const path = require("path");
 const { default: fetch } = require("cross-fetch");
 
-const entryPath = "md_files";
-const arrayMdFiles = [];
-
 let getAbsolutePath = (entryPath) => {
     return (path.resolve(entryPath));
 }
 
-const isAValidatePathPromise = (entryPath) => {
-    const absolutePath = getAbsolutePath(entryPath);
-    fs.access(absolutePath, (error, _) => {
-        if (!error) {
-            return (absolutePath);
-        } else {
-            return ("ERROR: La ruta " + entryPath + " no es válida");
-        }
+function isValidPath(entryPath) {
+    let absolutePath = getAbsolutePath(entryPath);
+    let isValidPathPromise = new Promise((resolve, reject) => {
+        fs.access(absolutePath, (error, _) => {
+            if (!error) {
+                resolve(true);
+            } else {
+                reject(false);
+            }
+        })
     })
+    return isValidPathPromise;
 }
+
 
 function isMdFile(entryPath) {
     if (path.extname(entryPath) === ".md") {
@@ -150,6 +151,15 @@ const validateArrayLinksPromise = (arrayObjects, accBodyResponses) => {
                 }))
         }
     })
+}
+
+//Flags
+const validateOption = (option) => {
+    return option.find((validateFlag) => validateFlag === "--validate")
+}
+
+const statsOption = (option) => {
+    return option.find((statsFlag) => statsFlag === "--stats")
 }
 
 module.exports = {
