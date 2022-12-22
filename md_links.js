@@ -29,7 +29,17 @@ function isMdFile(entryPath) {
     }
 }
 
-function getMdFilesFromPath(entryPath, arrayMdFiles) {
+function isDirectory(entryPath) {
+    let childrenFolders = fs.stat(entryPath, (_, stats) => {
+        if (stats.isDirectory() == true) {
+            return true;
+        } else {
+            return false;
+        }
+    })
+}
+
+function getMdFilesFromPath(entryPath, accMdFiles) {
     let childrenFolders = fs.readdirSync(entryPath, { withFileTypes: true })
         .filter(item => item.isDirectory())
         .map(item => entryPath + "/" + item.name);
@@ -39,12 +49,12 @@ function getMdFilesFromPath(entryPath, arrayMdFiles) {
         .map(mdFilePath => path.resolve(entryPath + "/" + mdFilePath));
 
     if (childrenFolders.length == 0) {
-        return arrayMdFiles.concat(childrenMdFiles);
+        return accMdFiles.concat(childrenMdFiles);
     } else {
         childrenFolders.forEach((childFolder) => {
-            arrayMdFiles = getMdFilesFromPath(childFolder, arrayMdFiles);
+            accMdFiles = getMdFilesFromPath(childFolder, accMdFiles);
         })
-        return childrenMdFiles.concat(arrayMdFiles);
+        return childrenMdFiles.concat(accMdFiles);
     }
 }
 
@@ -75,7 +85,7 @@ const getLinksFromMdFilePromise = (entryMdFile) => {
 }
 
 //Promesa que extrae los links de un arreglo de archivos .md (arrayFiles) y los acumula en un arreglo (arrayLinks).
-const getLinksFromMdFilesPromise = (arrayMdFiles, accLinks) => {   
+const getLinksFromArrayMdFilesPromise = (arrayMdFiles, accLinks) => {
     return new Promise((resolve, _) => {
         if (arrayMdFiles.length == 0) {
             resolve(accLinks);
@@ -85,7 +95,7 @@ const getLinksFromMdFilesPromise = (arrayMdFiles, accLinks) => {
             resolve(
                 getLinksFromMdFilePromise(head)
                     .then((links) => {
-                        return getLinksFromMdFilesPromise(arrayMdFiles, accLinks.concat(links))
+                        return getLinksFromArrayMdFilesPromise(arrayMdFiles, accLinks.concat(links))
                     }));
         }
     })
@@ -150,15 +160,16 @@ const validateArrayLinksPromise = (arrayObjects, accBodyResponses) => {
 const arrayPrueba = ["https://reqres.in/api/users/23", "https://reqres.in/api/users/2", "https://reqres.in/api/users/23"]
 const arrayMds = getMdFilesFromPath("/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files", [])
 
-getLinksFromMdFilesPromise(arrayMds, [])
+getLinksFromArrayMdFilesPromise(arrayMds, [])
     .then((arrayLinks) => validateArrayLinksPromise(arrayLinks, []))
     .then((res) => console.log(res));
 
 module.exports = {
     getAbsolutePath,
     isMdFile,
+    isDirectory,
     getMdFilesFromPath,
     getLinksFromMdFilePromise,
-    getLinksFromMdFilesPromise,
+    getLinksFromMdFilesPromise: getLinksFromArrayMdFilesPromise,
     validateArrayLinksPromise
 }
