@@ -30,13 +30,8 @@ function isMdFile(entryPath) {
 }
 
 function isDirectory(entryPath) {
-    let childrenFolders = fs.stat(entryPath, (_, stats) => {
-        if (stats.isDirectory() == true) {
-            return true;
-        } else {
-            return false;
-        }
-    })
+    let folder = fs.statSync(entryPath);
+    return folder.isDirectory();
 }
 
 function getMdFilesFromPath(entryPath, accMdFiles) {
@@ -157,19 +152,12 @@ const validateArrayLinksPromise = (arrayObjects, accBodyResponses) => {
     })
 }
 
-const arrayPrueba = ["https://reqres.in/api/users/23", "https://reqres.in/api/users/2", "https://reqres.in/api/users/23"]
-const arrayMds = getMdFilesFromPath("/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files", [])
-
-getLinksFromArrayMdFilesPromise(arrayMds, [])
-    .then((arrayLinks) => validateArrayLinksPromise(arrayLinks, []))
-    .then((res) => console.log(res));
-
 module.exports = {
     getAbsolutePath,
     isMdFile,
     isDirectory,
     getMdFilesFromPath,
     getLinksFromMdFilePromise,
-    getLinksFromMdFilesPromise: getLinksFromArrayMdFilesPromise,
+    getLinksFromArrayMdFilesPromise,
     validateArrayLinksPromise
 }
