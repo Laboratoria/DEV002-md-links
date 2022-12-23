@@ -3,36 +3,24 @@ const { resolve } = require("path");
 const path = require("path");
 const { default: fetch } = require("cross-fetch");
 
+const entryPath = "md_files"
+
 let getAbsolutePath = (entryPath) => {
-    return (path.resolve(entryPath));
+    return path.resolve(entryPath);
 }
 
-function isValidPath(entryPath) {
+//Promesa que resuleve si un path relativo o absoluto es válido.
+const validatePathPromise = (entryPath) => {
     let absolutePath = getAbsolutePath(entryPath);
-    let isValidPathPromise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         fs.access(absolutePath, (error, _) => {
             if (!error) {
-                resolve(true);
+                resolve(absolutePath);
             } else {
-                reject(false);
+                reject("Path: " + entryPath + " is not valid");
             }
         })
     })
-    return isValidPathPromise;
-}
-
-
-function isMdFile(entryPath) {
-    if (path.extname(entryPath) === ".md") {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-function isDirectory(entryPath) {
-    let folder = fs.statSync(entryPath);
-    return folder.isDirectory();
 }
 
 function getMdFilesFromPath(entryPath, accMdFiles) {
@@ -97,6 +85,28 @@ const getLinksFromArrayMdFilesPromise = (arrayMdFiles, accLinks) => {
     })
 }
 
+const getLinksFromFileOrDirectory = (entryPath) => {
+    return new Promise((resolve, reject) => {
+        validatePathPromise(entryPath)
+            .then((validatedPath) => {
+                if (path.extname(validatedPath) === ".md") {
+                    resolve(getLinksFromMdFilePromise(validatedPath));
+                } else if (fs.statSync(validatedPath).isDirectory()) {
+                    let arrayMdFiles = getMdFilesFromPath(validatedPath, []);
+                    resolve(getLinksFromArrayMdFilesPromise(arrayMdFiles, []));
+                } else {
+                    reject("Provided file is not a markdown")
+                }
+            })
+            .catch(error => reject(error))
+    })
+}
+
+// getLinksFromFileOrDirectory(entryPath)
+//     .then(links => validateArrayLinksPromise(links))
+//     .then(res => console.log(res))
+//     .catch(error => console.log(error))
+
 //Promesa que revisa si un link funciona o no - HTTP request
 const validateLink = (objectDefaultResponse) => {
     return new Promise((resolve, reject) => {
@@ -132,9 +142,12 @@ const validateLink = (objectDefaultResponse) => {
             })
     })
 }
+const validateArrayLinksPromise = (arrayObjects) => {
+    return validateArrayLinksPromiseRecursive(arrayObjects, [])
+}
 
 //Promesa que revisa si los links de un array funcionan o no - HTTP request
-const validateArrayLinksPromise = (arrayObjects, accBodyResponses) => {
+const validateArrayLinksPromiseRecursive = (arrayObjects, accBodyResponses) => {
     return new Promise((resolve, _) => {
         if (arrayObjects.length == 1) {
             resolve(validateLink(arrayObjects[0])
@@ -147,7 +160,7 @@ const validateArrayLinksPromise = (arrayObjects, accBodyResponses) => {
             resolve(validateLink(head)
                 .then((headBodyResponse) => {
                     accBodyResponses.push(headBodyResponse);
-                    return validateArrayLinksPromise(arrayObjects, accBodyResponses);
+                    return validateArrayLinksPromiseRecursive(arrayObjects, accBodyResponses);
                 }))
         }
     })
@@ -163,11 +176,6 @@ const statsOption = (option) => {
 }
 
 module.exports = {
-    getAbsolutePath,
-    isMdFile,
-    isDirectory,
-    getMdFilesFromPath,
-    getLinksFromMdFilePromise,
-    getLinksFromArrayMdFilesPromise,
+    getLinksFromFileOrDirectory,
     validateArrayLinksPromise
 }
