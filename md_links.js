@@ -85,7 +85,7 @@ const getLinksFromArrayMdFilesPromise = (arrayMdFiles, accLinks) => {
     })
 }
 
-const getLinksFromFileOrDirectory = (entryPath) => {
+const getLinksFromFileOrDirectoryPromise = (entryPath) => {
     return new Promise((resolve, reject) => {
         validatePathPromise(entryPath)
             .then((validatedPath) => {
@@ -102,7 +102,7 @@ const getLinksFromFileOrDirectory = (entryPath) => {
     })
 }
 
-// getLinksFromFileOrDirectory(entryPath)
+// getLinksFromFileOrDirectoryPromise(entryPath)
 //     .then(links => validateArrayLinksPromise(links))
 //     .then(res => console.log(res))
 //     .catch(error => console.log(error))
@@ -176,6 +176,6 @@ const statsOption = (option) => {
 }
 
 module.exports = {
-    getLinksFromFileOrDirectory,
+    getLinksFromFileOrDirectoryPromise,
     validateArrayLinksPromise
 }
