@@ -7,3 +7,5 @@
 </p></details>
 
 * [Debería ser 404](https://reqres.in/api/users/23)
+* [Debería ser 404](https://reqres.in/api/users/23)
+* [Debería ser 404](https://reqres.in/api/users/23)
