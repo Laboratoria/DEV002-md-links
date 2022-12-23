@@ -2,6 +2,7 @@ const fs = require("fs");
 const { resolve } = require("path");
 const path = require("path");
 const { default: fetch } = require("cross-fetch");
+const { rejects } = require("assert");
 
 const entryPath = "md_files"
 
@@ -167,15 +168,28 @@ const validateArrayLinksPromiseRecursive = (arrayObjects, accBodyResponses) => {
 }
 
 //Flags
-const validateOption = (option) => {
-    return option.find((validateFlag) => validateFlag === "--validate")
+
+const arguments = (option) => {
+    if (option == "--validate" || option == "--validate --stats") {
+        return true
+    } else if (option == undefined || option == "--stats") {
+        return false
+    }
 }
 
-const statsOption = (option) => {
-    return option.find((statsFlag) => statsFlag === "--stats")
+const countUniqueLinks = (arrayLinks) => {
+    let set = new Set();
+    arrayLinks.forEach(element => {
+        set.add(element.href)
+    });
+    return set.size;
 }
 
 module.exports = {
     getLinksFromFileOrDirectoryPromise,
-    validateArrayLinksPromise
+    validateArrayLinksPromise,
+    arguments,
+    totalLinks,
+    brokenLinks,
+    countUniqueLinks
 }

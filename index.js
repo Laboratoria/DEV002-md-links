@@ -1,41 +1,51 @@
-const fs = require("fs");
-const {getAbsolutePath,
-isMdFile,
-isDirectory,
-getMdFilesFromPath,
-getLinksFromMdFilePromise,
-getLinksFromArrayMdFilesPromise,
-validateArrayLinksPromise} = require("./md_links.js")
+const { getLinksFromFileOrDirectoryPromise,
+  validateArrayLinksPromise,
+  arguments,
+  totalLinks,
+  brokenLinks,
+  countUniqueLinks } = require("./md_links.js")
 
 
 const mdLinks = (entryPath, option) => {
   return new Promise((resolve, reject) => {
-    const absolutePath = getAbsolutePath(entryPath);
-    fs.access(absolutePath, (error, _) => {
-      if (!error) {reject("Invalid path")}
-        if (option == true || option == null) {
-          if (isMdFile(absolutePath) == true) {
-            getLinksFromMdFilePromise(entryPath)
-              .then(objectsLinks => validateArrayLinksPromise(objectsLinks, []))
-              .then(arrayObjects => (arrayObjects))
-              .then(res => resolve(res))
-          } else {
-            if (isDirectory(absolutePath)) {reject("Invalid path")} {
-              let mdFiles = getMdFilesFromPath(entryPath, [])
-              getLinksFromArrayMdFilesPromise(mdFiles, [])
-                .then((linksFromMdFiles) => validateArrayLinksPromise(linksFromMdFiles, []))
-                .then((valideResponse) => (valideResponse))
-                .then(res => resolve(res));
-            }
-          }
-        }
+    if (arguments(option)) {
+      if (option == "--validate") {
+        getLinksFromFileOrDirectoryPromise(entryPath)
+          .then(links => validateArrayLinksPromise(links))
+          .then(arrayObjects => resolve(arrayObjects))
+          .catch(error => reject(error))
+      } else if (option == "--validate --stats") {
+        getLinksFromFileOrDirectoryPromise(entryPath)
+          .then(links => validateArrayLinksPromise(links))
+          .then(arrayObjects => resolve(
+            "Total links: " + arrayObjects.length + "\n" +
+            "Unique: " + countUniqueLinks(arrayObjects) + "\n" +
+            "Broken: " + arrayObjects.filter(link => link.message === "Fail").length
+          ))
+          .catch(error => reject(error))
       }
-    })
+    } else if (!arguments(option)) {
+      if (option == undefined) {
+        getLinksFromFileOrDirectoryPromise(entryPath)
+          .then(res => resolve(res))
+          .catch(error => reject(error))
+      } else if (option == "--stats") {
+        getLinksFromFileOrDirectoryPromise(entryPath)
+          .then(arrayLinks => resolve(
+            "Total links: " + arrayLinks.length + "\n" +
+            "Unique links: " + countUniqueLinks(arrayLinks)
+          ))
+          .catch(error => reject(error))
+      }
+    }
   })
 }
 
-mdLinks("/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files", true)
+module.exports = { mdLinks }
+
+
+mdLinks("/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_2/recursion.md", "--validate --stats")
   .then(resp => console.log(resp))
-  .catch((error)=> console.log(error))
+  .catch((error) => console.log(error))
 // const arrayPrueba = ["https://reqres.in/api/users/23", "https://reqres.in/api/users/2", "https://reqres.in/api/users/23"]
 // const arrayMds = getMdFilesFromPath("/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files", [])
