@@ -4,8 +4,6 @@ const path = require("path");
 const { default: fetch } = require("cross-fetch");
 const { rejects } = require("assert");
 
-const entryPath = "md_files"
-
 let getAbsolutePath = (entryPath) => {
     return path.resolve(entryPath);
 }
@@ -103,11 +101,6 @@ const getLinksFromFileOrDirectoryPromise = (entryPath) => {
     })
 }
 
-// getLinksFromFileOrDirectoryPromise(entryPath)
-//     .then(links => validateArrayLinksPromise(links))
-//     .then(res => console.log(res))
-//     .catch(error => console.log(error))
-
 //Promesa que revisa si un link funciona o no - HTTP request
 const validateLink = (objectDefaultResponse) => {
     return new Promise((resolve, reject) => {
@@ -143,6 +136,7 @@ const validateLink = (objectDefaultResponse) => {
             })
     })
 }
+
 const validateArrayLinksPromise = (arrayObjects) => {
     return validateArrayLinksPromiseRecursive(arrayObjects, [])
 }
@@ -167,16 +161,6 @@ const validateArrayLinksPromiseRecursive = (arrayObjects, accBodyResponses) => {
     })
 }
 
-//Flags
-
-const arguments = (option) => {
-    if (option == "--validate" || option == "--validate --stats") {
-        return true
-    } else if (option == undefined || option == "--stats") {
-        return false
-    }
-}
-
 const countUniqueLinks = (arrayLinks) => {
     let set = new Set();
     arrayLinks.forEach(element => {
@@ -185,11 +169,18 @@ const countUniqueLinks = (arrayLinks) => {
     return set.size;
 }
 
+const getOptionsFromArguments = (processArguments) => {
+    return processArguments.filter((argument) => argument.startsWith("--"));
+}
+
+const getPathFromArguments = (processArguments) => {
+    return processArguments[2];
+}
+
 module.exports = {
     getLinksFromFileOrDirectoryPromise,
     validateArrayLinksPromise,
-    arguments,
-    totalLinks,
-    brokenLinks,
-    countUniqueLinks
+    countUniqueLinks,
+    getOptionsFromArguments,
+    getPathFromArguments
 }
