@@ -1,8 +1,8 @@
 const fs = require("fs");
-const { resolve } = require("path");
+// const { resolve } = require("path");
 const path = require("path");
 const { default: fetch } = require("cross-fetch");
-const { rejects } = require("assert");
+// const { rejects } = require("assert");
 
 let getAbsolutePath = (entryPath) => {
     return path.resolve(entryPath);

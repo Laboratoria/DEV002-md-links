@@ -35,10 +35,12 @@ const mdLinks = (entryPath, arrayOptions) => {
         .then(res => resolve(res))
         .catch(error => reject(error))
     }
+
   })
 }
 
 module.exports = { mdLinks }
 
 mdLinks(getPathFromArguments(arguments), getOptionsFromArguments(arguments))
-  .then(response => console.log(response));
+  .then(response => console.log(response))
+  .catch(error => console.log(error));
