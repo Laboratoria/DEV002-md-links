@@ -8,6 +8,32 @@ let getAbsolutePath = (entryPath) => {
     return path.resolve(entryPath);
 }
 
+const validatePath = (entryPath) => {
+    let absolutePath = getAbsolutePath(entryPath);
+    try {
+        fs.accessSync(absolutePath);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+const isDirectory = (entryPath) => {
+    fs.lstatSync(entryPath).isDirectory();
+}
+
+const isMdFile = (entryPath) => {
+    path.extname(entryPath) === ".md";
+}
+
+const readFile = (entryPath) => {
+    fs.readFileSync(entryPath, "utf-8");
+}
+
+const readDirectory = (entryPath) => {
+    fs.readdirSync(entryPath, "utf-8");
+}
+
 //Promesa que resuleve si un path relativo o absoluto es válido.
 const validatePathPromise = (entryPath) => {
     let absolutePath = getAbsolutePath(entryPath);
@@ -22,7 +48,8 @@ const validatePathPromise = (entryPath) => {
     })
 }
 
-function getMdFilesFromPath(entryPath, accMdFiles) {
+//Función que obtiene todos los archivos .md del entryPath
+const getMdFilesFromPath = (entryPath, accMdFiles) => {
     let childrenFolders = fs.readdirSync(entryPath, { withFileTypes: true })
         .filter(item => item.isDirectory())
         .map(item => entryPath + "/" + item.name);
@@ -94,7 +121,7 @@ const getLinksFromFileOrDirectoryPromise = (entryPath) => {
                     let arrayMdFiles = getMdFilesFromPath(validatedPath, []);
                     resolve(getLinksFromArrayMdFilesPromise(arrayMdFiles, []));
                 } else {
-                    reject("Provided file is not a markdown")
+                    reject("Provided file" + entryPath + " is not a markdown")
                 }
             })
             .catch(error => reject(error))
@@ -182,5 +209,6 @@ module.exports = {
     validateArrayLinksPromise,
     countUniqueLinks,
     getOptionsFromArguments,
-    getPathFromArguments
+    getPathFromArguments,
+    validatePathPromise
 }
