@@ -2,30 +2,36 @@ const { getLinksFromFileOrDirectoryPromise,
   validateArrayLinksPromise,
   countUniqueLinks,} = require("./md_links.js")
 
-const mdLinks = (entryPath, option) => {
+const mdLinks = (entryPath, arrayOptions) => {
   return new Promise((resolve, reject) => {
-    if (option === "--validate") {
+    if (arrayOptions.includes("--validate") && arrayOptions.includes("--stats")) {
+      getLinksFromFileOrDirectoryPromise(entryPath)
+        .then(links => validateArrayLinksPromise(links))
+        .then(arrayObjects => resolve(
+          "Total links: " + arrayObjects.length + "\n" +
+          "Unique: " + countUniqueLinks(arrayObjects) + "\n" +
+          "Broken: " + arrayObjects.filter(link => link.message === "Fail").length
+        ))
+        .catch(error => reject(error))
+    } else if (arrayOptions.includes("--validate")) {
       getLinksFromFileOrDirectoryPromise(entryPath)
         .then(links => validateArrayLinksPromise(links))
         .then(arrayObjects => resolve(arrayObjects))
         .catch(error => reject(error))
-    } else if (option === "--stats") {
+    } else if (arrayOptions.includes("--stats")) {
       getLinksFromFileOrDirectoryPromise(entryPath)
         .then(arrayLinks => resolve(
           "Total links: " + arrayLinks.length + "\n" +
           "Unique links: " + countUniqueLinks(arrayLinks)
         ))
         .catch(error => reject(error))
-    } else if (option === undefined) {
+    } else if (arrayOptions.length == 0) {
       getLinksFromFileOrDirectoryPromise(entryPath)
         .then(res => resolve(res))
         .catch(error => reject(error))
     }
+
   })
 }
 
 module.exports = { mdLinks }
-
-mdLinks("md_files/peticion.md", )
-  .then(response => console.log(response))
-  .catch(error => console.log(error));
