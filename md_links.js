@@ -8,32 +8,6 @@ let getAbsolutePath = (entryPath) => {
     return path.resolve(entryPath);
 }
 
-const validatePath = (entryPath) => {
-    let absolutePath = getAbsolutePath(entryPath);
-    try {
-        fs.accessSync(absolutePath);
-        return true;
-    } catch (error) {
-        return false;
-    }
-}
-
-const isDirectory = (entryPath) => {
-    fs.lstatSync(entryPath).isDirectory();
-}
-
-const isMdFile = (entryPath) => {
-    path.extname(entryPath) === ".md";
-}
-
-const readFile = (entryPath) => {
-    fs.readFileSync(entryPath, "utf-8");
-}
-
-const readDirectory = (entryPath) => {
-    fs.readdirSync(entryPath, "utf-8");
-}
-
 //Promesa que resuleve si un path relativo o absoluto es válido.
 const validatePathPromise = (entryPath) => {
     let absolutePath = getAbsolutePath(entryPath);
@@ -48,7 +22,7 @@ const validatePathPromise = (entryPath) => {
     })
 }
 
-//Función que obtiene todos los archivos .md del entryPath
+//Función que obtiene todos los archivos .md del entryPath (síncrono)
 const getMdFilesFromPath = (entryPath, accMdFiles) => {
     let childrenFolders = fs.readdirSync(entryPath, { withFileTypes: true })
         .filter(item => item.isDirectory())
@@ -95,9 +69,9 @@ const getLinksFromMdFilePromise = (entryMdFile) => {
 }
 
 //Promesa que extrae los links de un arreglo de archivos .md (arrayFiles) y los acumula en un arreglo (arrayLinks).
-const getLinksFromArrayMdFilesPromise = (arrayMdFiles, accLinks) => {
+const getLinksFromArrayMdFilesPromiseRecursive = (arrayMdFiles, accLinks) => {
     return new Promise((resolve, _) => {
-        if (arrayMdFiles.length == 0) {
+        if (arrayMdFiles.length === 0) {
             resolve(accLinks);
         } else {
             let head = arrayMdFiles.shift()
@@ -105,12 +79,13 @@ const getLinksFromArrayMdFilesPromise = (arrayMdFiles, accLinks) => {
             resolve(
                 getLinksFromMdFilePromise(head)
                     .then((links) => {
-                        return getLinksFromArrayMdFilesPromise(arrayMdFiles, accLinks.concat(links))
+                        return getLinksFromArrayMdFilesPromiseRecursive(arrayMdFiles, accLinks.concat(links))
                     }));
         }
     })
 }
 
+//Promesa que extrae los links de un archivo .md o de un directorio.
 const getLinksFromFileOrDirectoryPromise = (entryPath) => {
     return new Promise((resolve, reject) => {
         validatePathPromise(entryPath)
@@ -119,9 +94,9 @@ const getLinksFromFileOrDirectoryPromise = (entryPath) => {
                     resolve(getLinksFromMdFilePromise(validatedPath));
                 } else if (fs.statSync(validatedPath).isDirectory()) {
                     let arrayMdFiles = getMdFilesFromPath(validatedPath, []);
-                    resolve(getLinksFromArrayMdFilesPromise(arrayMdFiles, []));
+                    resolve(getLinksFromArrayMdFilesPromiseRecursive(arrayMdFiles, []));
                 } else {
-                    reject("Provided file" + entryPath + " is not a markdown")
+                    reject("Provided file---- " + entryPath + "----is not a markdown")
                 }
             })
             .catch(error => reject(error))
@@ -129,8 +104,8 @@ const getLinksFromFileOrDirectoryPromise = (entryPath) => {
 }
 
 //Promesa que revisa si un link funciona o no - HTTP request
-const validateLink = (objectDefaultResponse) => {
-    return new Promise((resolve, reject) => {
+const validateLinkPromise = (objectDefaultResponse) => {
+    return new Promise((resolve, _) => {
         fetch(objectDefaultResponse.href)
             .then((response) => {
                 if (response.ok) {
@@ -164,22 +139,23 @@ const validateLink = (objectDefaultResponse) => {
     })
 }
 
-const validateArrayLinksPromise = (arrayObjects) => {
+//Promesa que revisa si un link funciona o no - HTTP request
+const validateArrayLinks = (arrayObjects) => {
     return validateArrayLinksPromiseRecursive(arrayObjects, [])
 }
 
-//Promesa que revisa si los links de un array funcionan o no - HTTP request
+//Promesa que revisa si un arreglo de links funciona o no
 const validateArrayLinksPromiseRecursive = (arrayObjects, accBodyResponses) => {
     return new Promise((resolve, _) => {
         if (arrayObjects.length == 1) {
-            resolve(validateLink(arrayObjects[0])
+            resolve(validateLinkPromise(arrayObjects[0])
                 .then((bodyResponse) => {
                     accBodyResponses.push(bodyResponse);
                     return accBodyResponses;
                 }))
         } else {
             let head = arrayObjects.shift();
-            resolve(validateLink(head)
+            resolve(validateLinkPromise(head)
                 .then((headBodyResponse) => {
                     accBodyResponses.push(headBodyResponse);
                     return validateArrayLinksPromiseRecursive(arrayObjects, accBodyResponses);
@@ -188,6 +164,7 @@ const validateArrayLinksPromiseRecursive = (arrayObjects, accBodyResponses) => {
     })
 }
 
+//Función para contar los links que son únicos.
 const countUniqueLinks = (arrayLinks) => {
     let set = new Set();
     arrayLinks.forEach(element => {
@@ -206,7 +183,7 @@ const getPathFromArguments = (processArguments) => {
 
 module.exports = {
     getLinksFromFileOrDirectoryPromise,
-    validateArrayLinksPromise,
+    validateArrayLinksPromise: validateArrayLinks,
     countUniqueLinks,
     getOptionsFromArguments,
     getPathFromArguments,
