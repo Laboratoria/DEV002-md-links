@@ -1,6 +1,16 @@
 {
-  "name": "md-links",
-  "version": "0.1.0",
+  "name": "kmo-mdlinks",
+  "version": "1.0.3",
+  "description": "Module to get valid links from markdown files",
+  "main": "index.js",
+  "author": {
+    "name": "Kamila Ojeda",
+    "email": "beau.ojeda@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamojeda/DEV002-md-links.git"
+  },
   "engines": {
     "node": ">=16.x"
   },
@@ -8,5 +18,24 @@
     "createdAt": "2022-11-30T13:40:29.636Z",
     "version": "5.5.0",
     "commit": "51e941edf1cc991930aefd7dd9c406a7c43741c1"
+  },
+  "scripts": {
+    "build": "babel index.js -d dist",
+    "start": "babel-node index.js, md_links.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^1.2.1",
+    "cross-fetch": "^3.1.5",
+    "node-fetch": "^3.3.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/node": "^7.20.5",
+    "@babel/preset-env": "^7.20.2"
+  },
+  "bin": {
+    "kmo-mdlinks": "./cli.js"
   }
 }
