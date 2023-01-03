@@ -1,6 +1,6 @@
 const process = require("process")
-const { mdLinks } = require("../index.js")
-const { countUniqueLinks } = require("../md_links")
+const { mdLinks } = require("./index.js")
+const { countUniqueLinks } = require("./md_links")
 
 const [, , ...args] = process.argv
 // console.log([, , ...args])
