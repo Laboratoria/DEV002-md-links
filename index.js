@@ -7,9 +7,9 @@ const mdLinks = (entryPath, options) => {
     if (options === undefined || options === null) {
       console.log(
         "---------------------------------------------------------------------------" + "\n" +
-        "  THE PATH: " + getAbsolutePath(entryPath) + "\n" +
-        "---------------------------------------------------------------------------" + "\n" +
-        "--------------------contains the following information --------------------")
+        "  THE SOLVED PATH: " + getAbsolutePath(entryPath) + "\n" +
+        "---------------------------------------------------------------------------" + "\n" + "\n" +
+        "--------------------contains the following information --------------------" + "\n" + "\n")
       getLinksFromFileOrDirectoryPromise(entryPath)
         .then(res => resolve(res))
         .catch(error => reject(error))
@@ -17,8 +17,8 @@ const mdLinks = (entryPath, options) => {
       console.log(
         "---------------------------------------------------------------------------" + "\n" +
         "  THE PATH: " + getAbsolutePath(entryPath) + "\n" +
-        "---------------------------------------------------------------------------" + "\n" +
-        "--------------------contains the following information --------------------")
+        "---------------------------------------------------------------------------" + "\n" + "\n" +
+        "--------------------contains the following information --------------------" + "\n" + "\n")
       getLinksFromFileOrDirectoryPromise(entryPath)
         .then(res => resolve(res))
         .catch(error => reject(error))
@@ -26,19 +26,17 @@ const mdLinks = (entryPath, options) => {
       console.log(
         "---------------------------------------------------------------------------" + "\n" +
         "  THE PATH: " + getAbsolutePath(entryPath) + "\n" +
-        "---------------------------------------------------------------------------" + "\n" +
-        "--------------------contains the following information --------------------")
+        "---------------------------------------------------------------------------" + "\n" + "\n" +
+        "--------------------contains the following information --------------------" + "\n" + "\n")
       getLinksFromFileOrDirectoryPromise(entryPath)
         .then(links => validateArrayLinks(links))
         .then(arrayObjects => resolve(arrayObjects))
         .catch(error => reject(error))
     } else {
-      resolve("WARNING! Please, enter the following options: {validate: true} ó {validate: false}")
+      resolve("WARNING! Please, enter the following options: " + "\n"+
+      "{validate: true} OR" + "\n" +
+      "{validate: false}")
     }
   })
 }
-module.exports = { mdLinks }
-// mdLinks("./md_files")
-//   .then(response => console.log(response))
-//   .catch(error => console.log(error));
-// module.exports = { mdLinks }
+module.exports = mdLinks
