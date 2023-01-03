@@ -1,39 +1,37 @@
-# Markdown Links 🔗
+# **kmo-mdlinks** 🔗
 
 ## Índice
 
-* [1. Descripción del proyecto](#1-descripción-del-proyecto)
-* [2. Proceso de creación](#2-proceso-de-creación)
-* [3. Instrucciones de instalación/uso](#2-instrucciones-de-instalación/uso)
-* [4. Consideraciones generales](#4-consideraciones-generales)
+ [1. Descripción del proyecto](#1-descripción-del-proyecto)
+
+ [2. Instalación | Uso](#2-instalación-Uso)
+ 
+ [3. Consideraciones generales](#3-consideraciones-generales)
 
 ***
 
-## 1. Descripción del proyecto
-Markdown Links es una librería, que se desarrolló usando Node.js, que lee y analiza archivos en formato Markdown, para verificar el estado de los links que contengan y reportar algunas estadísticas.
-## 2. Organización y plan de acción
+# **1. Descripción del proyecto**
+Esta librería lee y analiza archivos en formato Markdown, para verificar el estado de los links que contengan y reportar algunas estadísticas. Se desarrolló usando Node.js.
 
-📅 Trello, para organizar el sprint, es donde está el planning.
-
-📅 Git-Hub Projects, para crear el plan de acción para priorizar y organizar el trabajo.
-
-![](img-README/Git-Hub_Projects.png)
-
-### - Diagrama de flujo
-![](img-README/Diagrama_Flujo.jpeg)
-
-## 2. Instrucciones de instalación/uso
-### - Instalación
+# **2. Instalación | Uso**
+## ***- Instalación***
  A través de la **terminal**:
 
+Una vez inicializado tu proyecto [npm init]("https://docs.npmjs.com/cli/v9/commands/npm-init"),
+
+desde tu terminal ejecuta:
+
 `npm install kmo-mdlinks`
+ 
+ ó
 
-### - Uso
-Debe poder ejecutarse de la siguiente
-manera a través de la **terminal**:
+ `npm install https://github.com/kamojeda/DEV002-md-links.git`
 
-```sh 
-node cli.js <path-to-file> [options]
+## ***- Uso***
+Debe poder ejecutarse a través de la **terminal**:
+
+```
+node ./bin/cli.js <path-to-file> [options]
 ```
 
 `<path-to-file>` puede ser una ruta absoluta o relativa, el módulo podrá resolverla en ambos casos.
@@ -51,34 +49,30 @@ Arrojará una lista con los links, su status y si es valido o no.
 
 **--validate --stats** Permitirá ejecutar ambas opciones.
 
-**El comportamiento por defecto** no valida si las URLs responden ok o no, solo identifica el archivo markdown (a partir de la ruta que recibe como argumento), analiza el archivo Markdown e imprime los links que vaya encontrando, junto con la ruta del archivo donde aparece y el texto que hay dentro del link (truncado a 50 caracteres).
-
+**El comportamiento por defecto** no valida si las URLs responden "OK" o no, solo identifica el archivo markdown (a partir de la ruta que recibe como argumento), analiza el archivo Markdown e imprime los links que vaya encontrando, junto con la ruta del archivo donde aparece y el texto que hay dentro del link (truncado a 50 caracteres).
 
 Por ejemplo:
 
-```sh
-node cli.js md_files/nodo_1/hoja_1/preambulo.md 
+```
+node cli.js md_files/nodo_1/resumen.md 
 ```
 ```sh
 ---------------------------------------------------------------------------
-  THE PATH: /Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/hoja_1/preambulo.md
+  THE SOLVED PATH: /Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/resumen.md
 ---------------------------------------------------------------------------
--------------------- contains the following information --------------------
+
+--------------------contains the following information --------------------
+
 [
   {
-    href: 'https://es.wikipedia.org/wiki/Markdown',
-    text: 'Markdown',
-    entryMdFile: '/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/hoja_1/preambulo.md'
-  },
-  {
-    href: 'https://nodejs.org/',
+    href: 'https://nodejs.org/es/',
     text: 'Node.js',
-    entryMdFile: '/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/hoja_1/preambulo.md'
+    entryMdFile: '/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/resumen.md'
   },
   {
-    href: 'https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg',
-    text: 'md-links',
-    entryMdFile: '/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/hoja_1/preambulo.md'
+    href: 'https://developers.google.com/v8/',
+    text: 'motor de JavaScript V8 de Chrome',
+    entryMdFile: '/Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/resumen.md'
   }
 ]
 ```
@@ -87,7 +81,7 @@ node cli.js md_files/nodo_1/hoja_1/preambulo.md --validate
 ```
 ```sh
 --------------------------------------------------------------------
-  THE PATH: /Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/hoja_1/preambulo.md
+  THE SOLVED PATH: /Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/hoja_1/preambulo.md
 --------------------------------------------------------------------
 -------- contains the following information --------
 [
@@ -119,7 +113,7 @@ node cli.js md_files/nodo_1/hoja_1/preambulo.md --stats --validate
 ```
 ```sh
 ---------------------------------------------------------------------------
-  THE PATH: /Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/hoja_1/preambulo.md
+  THE SOLVED PATH: /Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/hoja_1/preambulo.md
 ---------------------------------------------------------------------------
 -------------------- contains the following information --------------------
 Total links: 3
@@ -131,16 +125,17 @@ node cli.js md_files/nodo_1/hoja_1/preambulo.md --stats
 ```
 ```sh
 ---------------------------------------------------------------------------
-  THE PATH: /Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/hoja_1/preambulo.md
+  THE SOLVED PATH: /Users/osequeiros/Documents/Kamila/Proyectos-Laboratoria/DEV002-md-links/md_files/nodo_1/hoja_1/preambulo.md
 ---------------------------------------------------------------------------
 -------------------- contains the following information --------------------
 Total links: 3
 Unique: 3
 ```
+----------
 También puedes importar con `require` para usarlo
-  programáticamente **en tu código** con:
+  programáticamente **en tu código**:
 
-`const mdLinks = require("@kamojeda/md-links")`
+`const mdLinks = require("kmo-mdlinks")`
 
 Ofrece la siguiente interfaz:
 #### `mdLinks(path, options)`
@@ -176,7 +171,7 @@ Con `validate:true` :
 
 #### Ejemplo (resultados como comentarios)
 ```js
-const mdLinks = require("@kamojeda/md-links");
+const mdLinks = require("kmo-mdlinks");
 
 mdLinks("./some/example.md")
   .then(links => {
@@ -197,7 +192,17 @@ mdLinks("./some/dir")
   .catch(console.error);
 ```
 
+# **3. Consideraciones generales**
+## ***- Organización y plan de acción***
 
+📅 Trello, para organizar el sprint, es donde está el planning.
+
+📅 Git-Hub Projects, para crear el plan de acción para priorizar y organizar el trabajo.
+
+![](img-README/Git-Hub_Projects.png)
+
+### - Diagrama de flujo
+![](img-README/Diagrama_Flujo.jpeg)
 
 
 

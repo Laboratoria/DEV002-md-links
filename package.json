@@ -2,7 +2,7 @@
   "name": "kmo-mdlinks",
   "version": "1.0.2",
   "description": "Module to get valid links from markdown files",
-  "main": "./cli.js",
+  "main": "index.js",
   "author": {
     "name": "Kamila Ojeda",
     "email": "beau.ojeda@gmail.com"
@@ -36,6 +36,6 @@
     "@babel/preset-env": "^7.20.2"
   },
   "bin": {
-    "kmo-mdlinks": "./cli.js"
+    "kmo-mdlinks": "./bin/cli.js"
   }
 }

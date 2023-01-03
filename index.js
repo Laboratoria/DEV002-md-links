@@ -16,7 +16,7 @@ const mdLinks = (entryPath, options) => {
     } else if (options.validate === false) {
       console.log(
         "---------------------------------------------------------------------------" + "\n" +
-        "  THE PATH: " + getAbsolutePath(entryPath) + "\n" +
+        "  THE SOLVED PATH: " + getAbsolutePath(entryPath) + "\n" +
         "---------------------------------------------------------------------------" + "\n" + "\n" +
         "--------------------contains the following information --------------------" + "\n" + "\n")
       getLinksFromFileOrDirectoryPromise(entryPath)
@@ -25,7 +25,7 @@ const mdLinks = (entryPath, options) => {
     } else if (options.validate === true) {
       console.log(
         "---------------------------------------------------------------------------" + "\n" +
-        "  THE PATH: " + getAbsolutePath(entryPath) + "\n" +
+        "  THE SOLVED PATH: " + getAbsolutePath(entryPath) + "\n" +
         "---------------------------------------------------------------------------" + "\n" + "\n" +
         "--------------------contains the following information --------------------" + "\n" + "\n")
       getLinksFromFileOrDirectoryPromise(entryPath)
@@ -39,4 +39,4 @@ const mdLinks = (entryPath, options) => {
     }
   })
 }
-module.exports = mdLinks
+module.exports = {mdLinks}
