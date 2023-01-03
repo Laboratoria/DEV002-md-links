@@ -2,7 +2,9 @@ const fs = require("fs");
 // const { resolve } = require("path");
 const path = require("path");
 const { default: fetch } = require("cross-fetch");
+const { rejects } = require("assert");
 // const { rejects } = require("assert");
+// const axios = require("axios")
 
 let getAbsolutePath = (entryPath) => {
     return path.resolve(entryPath);
@@ -139,14 +141,9 @@ const validateLinkPromise = (objectDefaultResponse) => {
     })
 }
 
-//Promesa que revisa si un link funciona o no - HTTP request
-const validateArrayLinks = (arrayObjects) => {
-    return validateArrayLinksPromiseRecursive(arrayObjects, [])
-}
-
 //Promesa que revisa si un arreglo de links funciona o no
 const validateArrayLinksPromiseRecursive = (arrayObjects, accBodyResponses) => {
-    return new Promise((resolve, _) => {
+    return new Promise((resolve) => {
         if (arrayObjects.length == 1) {
             resolve(validateLinkPromise(arrayObjects[0])
                 .then((bodyResponse) => {
@@ -164,6 +161,11 @@ const validateArrayLinksPromiseRecursive = (arrayObjects, accBodyResponses) => {
     })
 }
 
+//Promesa que revisa si un link funciona o no - HTTP request
+const validateArrayLinks = (arrayObjects) => {
+    return validateArrayLinksPromiseRecursive(arrayObjects, [])
+}
+
 //Función para contar los links que son únicos.
 const countUniqueLinks = (arrayLinks) => {
     let set = new Set();
@@ -173,19 +175,23 @@ const countUniqueLinks = (arrayLinks) => {
     return set.size;
 }
 
-const getOptionsFromArguments = (processArguments) => {
-    return processArguments.filter((argument) => argument.startsWith("--"));
-}
+// const getOptionsFromArguments = (processArguments) => {
+//     let options = { validate: true };
+//     let arrayOptions = processArguments.filter((argument) => argument.startsWith("--"));
+//     if (arrayOptions.includes("--validate")) {
+//         return options;
+//     } else
+//         return options = {validate: false};
+// }
 
-const getPathFromArguments = (processArguments) => {
-    return processArguments[2];
-}
+//     const getPathFromArguments = (processArguments) => {
+//         return processArguments[2];
+//     }
 
 module.exports = {
+    getAbsolutePath,
     getLinksFromFileOrDirectoryPromise,
-    validateArrayLinksPromise: validateArrayLinks,
+    validateArrayLinks,
     countUniqueLinks,
-    getOptionsFromArguments,
-    getPathFromArguments,
-    validatePathPromise
+    validatePathPromise,
 }
