@@ -10,7 +10,7 @@
 ***
 
 ## 1. Descripción del proyecto
-Markdown Links es una librería, que se desarrolló usando Node.js, para que lea y analice archivos en formato Markdown, para verificar el estado de los links que contengan y reportar algunas estadísticas.
+Markdown Links es una librería, que se desarrolló usando Node.js, que lee y analiza archivos en formato Markdown, para verificar el estado de los links que contengan y reportar algunas estadísticas.
 ## 2. Organización y plan de acción
 
 📅 Trello, para organizar el sprint, es en donde está el planning.
@@ -26,13 +26,20 @@ Markdown Links es una librería, que se desarrolló usando Node.js, para que lea
 ### - Instalación
  A través de la **terminal**:
 
-`npm install @kamojeda/md-links`
+`npm install kmo-mdlinks`
 
 ### - Uso
 Debe poder ejecutarse de la siguiente
 manera a través de la **terminal**:
 
-`@kamojeda/md-links <path-to-file> [options]`
+`kmo-mdlinks <path-to-file> [options]`
+
+`<path-to-file>` puede ser una ruta absoluta o relativa, el módulo podrá resolverla en ambos casos.
+
+Se le puede indicar directamente `un archivo md o una carpeta.` 
+
+Si la ruta es `una carpeta`, el módulo buscará de manera recursiva archivos markdown y los analizará, al final mostrará el despliegue de los archivos encontrados por carpeta y el análisis de los mismos.
+
 Por ejemplo:
 
 ```sh
