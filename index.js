@@ -6,7 +6,7 @@ const path = require('path');
 //console.log(path)
 
 const fileName = 'README.md'
-const dirName = './test-files'
+const dirName = './files-to-read'
 
 //console.log(fs);
 
@@ -37,7 +37,7 @@ function readDirFn(path) {
 //readDirFn('../DEV002-data-lovers');
 
 //-----------Uniendo dos fragmentos de ruta------------
-const joinedPath = path.join('./test-files', 'check.txt')
+const joinedPath = path.join('./files-to-read', 'check.txt')
 //console.log(joinedPath);
 //readFileFn(joinedPath);
 
@@ -107,8 +107,36 @@ function reverseTextNodes(elem) { //recorre el DOM e invierte todos los textos
     }
   })
 }
+
+//----------------Promesas--------------------------------------------
+// En el sgte ejemplo la fn1 de ejecuta 2 seg despues del resto del codigo
+// const fn1 = () => {
+//   setTimeout(() => {
+//     console.log('Hola');
+//   }, 2000);
+// };
+
+// const fn2 = () => {
+//   console.log('mundo');
+// };
+
+// fn1();
+// fn2();
+
+const myPromise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve('Hola');
+  }, 2000);
+});
+
+myPromise
+  .then(res => {
+    console.log(res + ' mundo')
+    console.log('END')
+  })
+
 //-----------------------------------------------------
-console.log('END')
+//console.log('END')
 
 //---------Exportando----------------------------------
 module.exports = { readFileFn }
