@@ -1,12 +1,29 @@
 {
   "name": "md-links",
   "version": "0.1.0",
+  "description": "Module to parse md files and validate their links",
+  "license": "MIT",
+  "author": "Melanie Tolvett S. <melanietolvett@gmail.com>",
+  "main": "src/index.js",
+  "bin": "src/cli.js",
+  "repository": "github:Psyderalis/DEV002-md-links",
   "engines": {
     "node": ">=16.x"
+  },
+  "scripts": {
+    "eslint": "eslint --ext .js src/ test/",
+    "pretest": "npm run eslint && npm run htmlhint",
+    "test": "jest --verbose --coverage",
+    "open-coverage-report": "opener ./coverage/lcov-report/index.html",
+    "start": "serve src/",
+    "deploy": "gh-pages -d src"
   },
   "bootcamp": {
     "createdAt": "2022-11-30T13:40:29.636Z",
     "version": "5.5.0",
     "commit": "51e941edf1cc991930aefd7dd9c406a7c43741c1"
+  },
+  "devDependencies": {
+    "jest": "^29.4.1"
   }
 }
