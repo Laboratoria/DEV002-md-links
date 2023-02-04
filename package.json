@@ -7,16 +7,19 @@
   "main": "src/index.js",
   "bin": "src/cli.js",
   "repository": "github:Psyderalis/DEV002-md-links",
-  "engines": {
-    "node": ">=16.x"
-  },
   "scripts": {
     "eslint": "eslint --ext .js src/ test/",
-    "pretest": "npm run eslint && npm run htmlhint",
+    "pretest": "npm run eslint",
     "test": "jest --verbose --coverage",
-    "open-coverage-report": "opener ./coverage/lcov-report/index.html",
-    "start": "serve src/",
-    "deploy": "gh-pages -d src"
+    "open-coverage-report": "opener ./coverage/lcov-report/index.html"
+  },
+  "keywords": [
+    "javascript",
+    "jest",
+    "markdown"
+  ],
+  "engines": {
+    "node": ">=16.x"
   },
   "bootcamp": {
     "createdAt": "2022-11-30T13:40:29.636Z",
