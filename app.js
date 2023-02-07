@@ -57,7 +57,6 @@ const checkPath = (dir) => {
 
 
 
-
   
 //Función para leer los archivos
 /* const readFiles = (path)=>{
