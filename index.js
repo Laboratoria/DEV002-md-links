@@ -1,4 +1,4 @@
-const { pathAbsolute, changeToAbsolute, idDirFil,checkPath } = require('./app')
+const { pathAbsolute, changeToAbsolute, checkPath } = require('./app')
 const fs = require("fs");
 const path = require("path");
 
@@ -8,8 +8,9 @@ const mdLinks = (path, options) => {
 
     if(fs.existsSync(path)){
       console.log(" dino q es",changeToAbsolute(path))
-      console.log(" que s",idDirFil(path));
-      console.log("klear 2", checkPath(path));
+      findLinks(path)
+      
+      console.log("sdsfsdf",checkPath(path));
 
 
     } else {

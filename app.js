@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const axios = require('axios');
+const mdFiles = [];
 
 // regex para ver si es ruta absoluta
 const regEx = /^(\/|[A-Za-z]:\\)/;
@@ -16,25 +18,87 @@ const changeToAbsolute = (ruta) => {
 }
 
 
-
-const idDirFil = (path) => {
-    
-fs.lstat(path, (err, stats) => {
-  console.log("que es eto", stats);
-
-    if (err) {
-      console.error(err);
-    } else if (stats.isDirectory()) {
-
-      console.log('Es una carpeta',stats.isDirectory());
-    } else if (stats.isFile()) {
-      path.
-      console.log('Es un archivo', stats.isFile());
-    } else {
-      console.log('No es ni una carpeta ni un archivo');
+/*const checkPath = (ruta) => {
+  
+  const files = fs.readdirSync(ruta);
+  files.forEach(file => {
+    const filePath = path.join(ruta, file)
+    //console.log("filepath",filePath);
+    const stats = fs.lstatSync(filePath);
+   // console.log("fuera", stats)
+    //console.log("extencion", path.extname(filePath) )
+  if(stats.isDirectory()){
+      checkPath(filePath);
+    } else if(stats.isFile() && path.extname(filePath) === '.md'){
+      mdFiles.push(filePath);
     }
   });
+  return mdFiles;
+} */
+const checkPath = (dir) => {
+  const stats = fs.lstatSync(dir);
+  if (stats.isFile() && path.extname(dir) === '.md') {
+    mdFiles.push(dir);
+  } else if (stats.isDirectory()) {
+    const files = fs.readdirSync(dir);
+    files.forEach(file => {
+      const filePath = path.join(dir, file);
+      checkPath(filePath);
+    });
+  }
+  return mdFiles;
 }
+
+
+
+
+
+
+
+
+
+
+  
+//Función para leer los archivos
+/* const readFiles = (path)=>{
+  fs.readFile(path, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return err;
+      }
+    console.log("¿estás leyendo archivos?",data);
+
+  });
+  }*/
+  
+
+/*const mdFiles = [];
+
+function checkPath(dir) {
+  fs.lstat(dir, (err, stats) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log("fills", path.extname(dir))
+    console.log("file. md", )
+    if (stats.isFile() && path.extname(dir) === '.md') {
+      console.log(" dir ", dir);
+    } else if (stats.isDirectory()) {
+      fs.readdir(dir, (err, files) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+
+        
+      });
+    }
+  });
+} */
+
+
+
 
 
 
@@ -60,14 +124,14 @@ const mdLinks = (path) => {
   console.log("absoluta booleano", isAbsolute(path));
   // path == relativa
   return new Promise((resolve, reject) => {
-    // resolve =>  relativa al directorio desde donde se invoca node
+    // resolve =>  relativa al rutaectorio desde donde se invoca node
 
 
     // istat para saber si es una carpeta 
     fs.lstat(path, (err, stats) => {
       if (err) {
         console.error(err);
-      } else if (stats.isDirectory()) {
+      } else if (stats.isrutaectory()) {
         console.log('Es una carpeta');
       } else if (stats.isFile()) {
         console.log('Es un archivo');
@@ -78,8 +142,8 @@ const mdLinks = (path) => {
 
 
     // funcion - chequear o convertir una ruta absoluta
-    // probar si esa ruta absoluta  es una archivo o directorio
-    //  Si es un directorio filtrar los archivos md. arry filtrado
+    // probar si esa ruta absoluta  es una archivo o rutaectorio
+    //  Si es un rutaectorio filtrar los archivos md. arry filtrado
 
 
 
@@ -89,6 +153,6 @@ const mdLinks = (path) => {
 
 
 module.exports = {
-  changeToAbsolute, idDirFil, checkPath
+  changeToAbsolute,  checkPath,findLinks
 
 };

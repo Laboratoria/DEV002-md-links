@@ -1,6 +1,6 @@
 const { mdLinks } = require('./index.js');
 
-mdLinks('./node_modules')
+mdLinks('./Caperta')
 
 .then(() => {
  mdLinks => console.log(mdLinks)
