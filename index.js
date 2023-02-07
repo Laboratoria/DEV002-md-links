@@ -8,7 +8,7 @@ const mdLinks = (path, options) => {
 
     if(fs.existsSync(path)){
       console.log(" dino q es",changeToAbsolute(path))
-      findLinks(path)
+      
       
       console.log("sdsfsdf",checkPath(path));
 

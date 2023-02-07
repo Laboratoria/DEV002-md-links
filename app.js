@@ -18,6 +18,8 @@ const changeToAbsolute = (ruta) => {
 }
 
 
+
+
 /*const checkPath = (ruta) => {
   
   const files = fs.readdirSync(ruta);
@@ -49,6 +51,34 @@ const checkPath = (dir) => {
   return mdFiles;
 }
 
+
+const shareLinks = () => {
+
+  
+
+}
+
+
+
+/*function findLinks(mdFiles) {
+  const links = [];
+  mdFiles.forEach(fileUrl => {
+    axios
+      .get(fileUrl)
+      .then(response => {
+        const content = response.data;
+        const regex = /\[(.*?)\]\((.*?)\)/g;
+        let match;
+        while ((match = regex.exec(content)) !== null) {
+          links.push(match[2]);
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  });
+  return links;
+} */
 
 
 
@@ -152,6 +182,6 @@ const mdLinks = (path) => {
 
 
 module.exports = {
-  changeToAbsolute,  checkPath,findLinks
+  changeToAbsolute,  checkPath
 
 };
