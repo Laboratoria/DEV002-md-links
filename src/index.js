@@ -6,7 +6,6 @@ const mdLinks = (path, option) => {
     console.log('fix me')
 };
 
-
 // Validación de ruta: Check if the file exists in the current directory and is readeble.
 const validatePath = (myPath) => {
     return new Promise((resolve, reject) => {
@@ -20,10 +19,6 @@ const validatePath = (myPath) => {
     })
 };
 
-/* validatePath('./files-to-read/achicando.md')
-    .then(res => console.log(res))
-    .catch(err => console.error(err)) */
-
 // validación de option | 'validate', {validate : true}, {validate : false}
 const validateOption = (option) => {
     return new Promise((resolve, reject) => {
@@ -35,25 +30,44 @@ const validateOption = (option) => {
     })
 };
 
-
 // validación de path absoluta o relativa
 const validateAbsolutePath = myPath => path.isAbsolute(myPath);
-/* const currentWorkingDirectory = process.cwd();
-const resolvedPath = path.resolve(currentWorkingDirectory, relativePath);
+
+// resolver ruta relativa a absoluta
+const myCurrentWorkingDir = process.cwd();
+// const relativePath = './src/index.js';
+let resolvedPath = '';
+const resolvePath = (currentWorkingDir, relativePath) => {
+    resolvedPath = path.resolve(currentWorkingDir, relativePath);
+    return resolvedPath
+}
+/* resolvePath(myCurrentWorkingDirectory, relativePath);
 console.log(`Current directory: ${currentWorkingDirectory}`)
+console.log(`Resolved Path: ${resolvedPath}`)
 
-*/
+validatePath(resolvedPath)
+    .then(res => console.log(res))
+    .catch(err => console.error(err)) */
 
-
-
-// validación de directorio
-// validación de archivo md
-
-
+// validación de directorio o archivo md
+const validateDirOrMD = (myPath) =>{    
+   const extensionFile = path.extname(myPath);
+    return new Promise((resolve, reject) => {
+        if (extensionFile == '') {
+            resolve('dir')
+        } if (extensionFile == '.md') {
+            resolve('md file')
+        } else {
+            reject(new Error('Invalid type of file'))
+        }
+    })
+};
 
 module.exports = {
     mdLinks,
     validatePath,
     validateOption,
-    validateAbsolutePath
+    validateAbsolutePath,
+    resolvePath,
+    validateDirOrMD
 }
