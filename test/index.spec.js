@@ -2,49 +2,64 @@ const {
   mdLinks,
   validatePath,
   validateOption,
+  validateAbsolutePath
 } = require('../src/index.js');
 
-const validPath = './files-to-read/achicando.md';
-const invalidPath = 'achicando'
-
 //test para mdLinks
-describe('Test para mdLinks', () => {
+describe('Test to mdLinks()', () => {
   it('mdLinks debería ser una función', () => {
     expect(typeof mdLinks).toBe('function')
   })
 });
 
 // test para validacion de path
-describe('Test para validar la ruta (path)', () => {
-  test('Retorna true si la ruta es valida', () => {
+describe('Test to validatePath()', () => {
+  test('Returns true for a valid path', () => {
+    const validPath = './files-to-read/achicando.md';
     return expect(validatePath(validPath)).resolves.toBe(true)
   });
-  test('Arroja error si la ruta es invalida', () => {
+  test('Throw error for an invalid path', () => {
+    const invalidPath = 'achicando'
     return expect(validatePath(invalidPath)).rejects.toThrow()
   });
 });
 
 // test para validación de option
-describe('Test para validar la opcion (option)', () => {
-  test('Retorna true si la opcion es valida', () => {
-    return expect(validateOption({ validate: true })).resolves.toBe(true)
+describe('Test to validateOption()', () => {
+  test('Returns true for a valid option', () => {
+    const validOption1 = { validate: true };
+    return expect(validateOption(validOption1)).resolves.toBe(true)
   });
-  test('Retorna true si la opcion es valida', () => {
-    return expect(validateOption({ validate: false })).resolves.toBe(true)
+  test('Returns true for a valid option', () => {
+    const validOption2 = { validate: false };
+    return expect(validateOption(validOption2)).resolves.toBe(true)
   });
-  test('Retorna true si la opcion es valida', () => {
-    return expect(validateOption('validate')).resolves.toBe(true)
+  test('Returns true for a valid option', () => {
+    const validOption3 = 'validate';
+    return expect(validateOption(validOption3)).resolves.toBe(true)
   });
-  test('Arroja error si la opcion es invalida', () => {
-    return expect(validateOption('option')).rejects.toThrow()
+  test('Throw error for an invalid option', () => {
+    const invalidOption1 = 'option'
+    return expect(validateOption(invalidOption1)).rejects.toThrow()
   });
-  test('Arroja error si la opcion es invalida', () => {
-    return expect(validateOption({ validate: 33 })).rejects.toThrow()
+  test('Throw error for an invalid option', () => {
+    const invalidOption2 = { validate: 33 }
+    return expect(validateOption(invalidOption2)).rejects.toThrow()
   });
 });
 
-
 // test para validación de path absoluta o relativa
+describe('Test to validateAbsolutePath', () => {
+  test('Returns true for an absolute path', () => {
+    const absolutePath = '/home/user/app.js';
+    return expect(validateAbsolutePath(absolutePath)).toBe(true)
+  });
+  test('Returns false for a relative path', () => {
+    const relativePath = './app.js';
+    return expect(validateAbsolutePath(relativePath)).toBe(false)
+  });
+});
+
 // test para validación de directorio
 // test para validación de archivo md
 //------------------------------------

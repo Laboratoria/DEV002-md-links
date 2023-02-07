@@ -1,4 +1,6 @@
 const fs = require('fs');
+const path = require('path');
+
 
 const mdLinks = (path, option) => {
     console.log('fix me')
@@ -6,9 +8,9 @@ const mdLinks = (path, option) => {
 
 
 // Validación de ruta: Check if the file exists in the current directory and is readeble.
-const validatePath = (path) => {
+const validatePath = (myPath) => {
     return new Promise((resolve, reject) => {
-        fs.access(path, fs.constants.F_OK | fs.constants.R_OK, (err) => {
+        fs.access(myPath, fs.constants.F_OK | fs.constants.R_OK, (err) => {
             if (!err) {
                 resolve(true)
             } else {
@@ -25,7 +27,7 @@ const validatePath = (path) => {
 // validación de option | 'validate', {validate : true}, {validate : false}
 const validateOption = (option) => {
     return new Promise((resolve, reject) => {
-        if ( option === 'validate' || (typeof option === 'object' && (option.validate === true || option.validate === false)) ) {
+        if (option === 'validate' || (typeof option === 'object' && (option.validate === true || option.validate === false))) {
             resolve(true)
         } else {
             reject(new Error('Invalid option'))
@@ -34,8 +36,16 @@ const validateOption = (option) => {
 };
 
 
-
 // validación de path absoluta o relativa
+const validateAbsolutePath = myPath => path.isAbsolute(myPath);
+/* const currentWorkingDirectory = process.cwd();
+const resolvedPath = path.resolve(currentWorkingDirectory, relativePath);
+console.log(`Current directory: ${currentWorkingDirectory}`)
+
+*/
+
+
+
 // validación de directorio
 // validación de archivo md
 
@@ -44,5 +54,6 @@ const validateOption = (option) => {
 module.exports = {
     mdLinks,
     validatePath,
-    validateOption
+    validateOption,
+    validateAbsolutePath
 }
