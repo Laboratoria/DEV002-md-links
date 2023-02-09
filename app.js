@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
+const { Console } = require('console');
+
 const mdFiles = [];
 
 // regex para ver si es ruta absoluta
@@ -10,11 +12,11 @@ function isAbsolute(path) {
 }
 // validando si es absoluta o relativa tmb esta convirtiendo la ruta relativa a absoluta
 const changeToAbsolute = (ruta) => {
-    if (isAbsolute(ruta)) {
-        return ruta;
-      } else {
-        return path.resolve(ruta);
-      }
+  if (isAbsolute(ruta)) {
+    return ruta;
+  } else {
+    return path.resolve(ruta);
+  }
 }
 
 
@@ -38,13 +40,22 @@ const changeToAbsolute = (ruta) => {
   return mdFiles;
 } */
 const checkPath = (dir) => {
+
   const stats = fs.lstatSync(dir);
+
   if (stats.isFile() && path.extname(dir) === '.md') {
+
     mdFiles.push(dir);
   } else if (stats.isDirectory()) {
+
     const files = fs.readdirSync(dir);
+
     files.forEach(file => {
+
       const filePath = path.join(dir, file);
+
+      // nombre de la ruta ./carpeta + readme.md
+
       checkPath(filePath);
     });
   }
@@ -52,54 +63,59 @@ const checkPath = (dir) => {
 }
 
 
-const shareLinks = () => {
 
-  
+const readFiles = (path)=>{
+  fs.readFile(path, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      return err;
 
+      }
+      console.log(data)
+   return data;
+  });
+
+  }
+
+
+const findLinks = (mdFiles) => {
+  console.log("mdLinks en findLinks", mdFiles)
+  mdFiles.forEach(file => { 
+
+    console.log("lista array", file);
+
+    console.log("lectura de arr",  readFiles(file))
+    return readFiles(file)
+
+  });
 }
 
 
 
-/*function findLinks(mdFiles) {
-  const links = [];
-  mdFiles.forEach(fileUrl => {
+/*
     axios
-      .get(fileUrl)
+      .get(file)
       .then(response => {
+        console.log("reponse", response.status);
         const content = response.data;
         const regex = /\[(.*?)\]\((.*?)\)/g;
-        let match;
-        while ((match = regex.exec(content)) !== null) {
-          links.push(match[2]);
+        
+        let contLink;
+        if((contLink = regex.match(content)) !== null){
+          links.push(contLink)
         }
       })
       .catch(error => {
         console.error(error);
       });
-  });
-  return links;
-} */
+*/
 
 
 
-
-
-
-
-
-  
 //Función para leer los archivos
-/* const readFiles = (path)=>{
-  fs.readFile(path, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return err;
-      }
-    console.log("¿estás leyendo archivos?",data);
 
-  });
-  }*/
-  
+
+
 
 /*const mdFiles = [];
 
@@ -182,6 +198,6 @@ const mdLinks = (path) => {
 
 
 module.exports = {
-  changeToAbsolute,  checkPath
+  changeToAbsolute, checkPath,findLinks,readFiles
 
 };
