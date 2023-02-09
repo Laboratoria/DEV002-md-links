@@ -8,5 +8,26 @@
     "createdAt": "2022-11-30T13:40:29.636Z",
     "version": "5.5.0",
     "commit": "51e941edf1cc991930aefd7dd9c406a7c43741c1"
+  },
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ErikaSuesca/DEV002-md-links.git"
+  },
+  "author": "Erika Rios",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ErikaSuesca/DEV002-md-links/issues"
+  },
+  "homepage": "https://github.com/ErikaSuesca/DEV002-md-links#readme",
+  "dependencies": {
+    "jest": "^29.4.2"
   }
 }
