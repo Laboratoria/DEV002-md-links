@@ -4,25 +4,88 @@ const axios = require('axios');
 const { Console } = require('console');
 
 const mdFiles = [];
+//Devuelve true si el path es absoluto sino false.
+const pathRelative = (ruta) => {
+  return path.isAbsolute(ruta)
+};
+
+//Convertir el path en Absoluto
+const changeToAbsolute = (ruta) => {
+  return path.resolve(ruta);
+};
+
+
+
+const checkFile = filePath => {
+  return new Promise((resolve, reject) => {
+    fs.lstat(filePath, (err, stat) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      if (stat.isFile()) {
+        resolve(`${filePath} is a file`);
+      } else if (stat.isDirectory()) {
+        resolve(`${filePath} is a directory`);
+      }
+    });
+  });
+};
+
 
 // regex para ver si es ruta absoluta
-const regEx = /^(\/|[A-Za-z]:\\)/;
-function isAbsolute(path) {
-  return regEx.test(path);
-}
-// validando si es absoluta o relativa tmb esta convirtiendo la ruta relativa a absoluta
-const changeToAbsolute = (ruta) => {
-  if (isAbsolute(ruta)) {
-    return ruta;
-  } else {
-    return path.resolve(ruta);
-  }
-}
 
 
 
 
-/*const checkPath = (ruta) => {
+const extractLinks = (ruta) => {
+  return new Promise((resolve, reject) => {
+      fs.readFile(ruta, 'utf-8', (error, fileContents) => {
+          if (error) {
+              return reject(error);
+          }
+
+          const regex = /\[(.*)\]\((https?:\/\/\S+)\)/g;
+          const links = [];
+
+          let match;
+          while ((match = regex.exec(fileContents))) {
+              links.push({
+                  text: match[1],
+                  href: match[2],
+                  file: ruta
+              });
+          }
+
+          resolve(links);
+      });
+  });
+};
+
+const validateLinks = (links) => {
+  return Promise.all(
+      links.map((link) => {
+          return axios.head(link.href)
+              .then(() => {
+                  link.status = 'OK';
+                  return link;
+              })
+              .catch((error) => {
+                  link.status = error.message;
+                  return link;
+              });
+      })
+  );
+};
+
+
+
+//
+
+
+
+/*const checkPath = () => {
   
   const files = fs.readdirSync(ruta);
   files.forEach(file => {
@@ -65,6 +128,7 @@ const checkPath = (dir) => {
 
 
 const readFiles = (path)=>{
+
   fs.readFile(path, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
@@ -79,6 +143,7 @@ const readFiles = (path)=>{
 
 
 const findLinks = (mdFiles) => {
+  
   console.log("mdLinks en findLinks", mdFiles)
   mdFiles.forEach(file => { 
 
@@ -198,6 +263,6 @@ const mdLinks = (path) => {
 
 
 module.exports = {
-  changeToAbsolute, checkPath,findLinks,readFiles
+  changeToAbsolute, checkPath,findLinks,readFiles,pathRelative,extractLinks,validateLinks
 
 };
