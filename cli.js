@@ -1,8 +1,12 @@
-const { mdLinks } = require('./index.js');
+const { mdLinks } = require("./index.js");
+const chalk = require('chalk');
 
-console.log('--------------------Bienvenido--------------------');
+console.log(chalk.yellow('--------------------Welcome to my library 📁--------------------'));
 
-mdLinks('/noexiste/').then(() => {})
-.catch((error) => {
-    console.log(error)
-});
+mdLinks("Testing/PruebaconLinks.md")
+  .then((result) => {
+    console.log(result)
+  })
+  .catch((error) => {
+    console.log(error);
+  });

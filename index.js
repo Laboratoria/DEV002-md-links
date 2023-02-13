@@ -1,20 +1,18 @@
-const fs = require('fs');
+const { existPath } = require("./functions.js");
+const chalk = require("chalk");
 
 const mdLinks = (path, options) => {
-return new Promise ((resolve, reject) => {
-  // Identifica si la ruta existe
-  if(fs.existsSync(path)) {
-  // Revisar o convertir a una ruta absoluta
-  // Probar si la ruta absoluta es archivo o directorio 
-  // Si es un directorio mostrar los archivos md
-  } else {
-    // Si no existe la ruta, rechaza la promesa
-  reject('La ruta no existe');
-  }
-  
-});
-}
+  return new Promise((resolve, reject) => {
+    // Identificar si la ruta exite
+    if (!existPath(path)) {
+      reject('The path does not exist');
+      console.log(chalk.yellow(reject));
+    } else {
+      console.log(chalk.blue('The path exist'));
+    }
+  });
+};
 
-module.exports =  {
-  mdLinks
+module.exports = {
+  mdLinks,
 };
