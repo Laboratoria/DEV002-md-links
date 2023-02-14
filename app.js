@@ -80,7 +80,7 @@ const validateLinks = (links) => {
 
 
 
-        resolve({ contStatus, contStatusText })
+        resolve(response)
       })
       .catch(error => {
         if (error.code === 'ENOTFOUND') {
@@ -102,18 +102,20 @@ const processLinks = (extract) => {
       const linkHref = link.href
      
       validateLinks(linkHref)
-        .then(({ contStatus, contStatusText }) => ({ contStatus, contStatusText }))
+        .then((response) => {
+          const obj = { 
+            ...links,
+            status: response.status,
+            ok: response.statusText 
+          };
+          console.log("DFSDFSDF", obj)
+          return obj;
+        } )
     
         .catch((error) => console.error(error))
 
      
-        arrli.push({
-          ...links,
         
-          
-
-        })
-        console.log("arrli", arrli)
 
 
     });
