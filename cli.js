@@ -1,12 +1,14 @@
+#!/usr/bin/env nodo
 const { mdLinks } = require("./index.js");
 const chalk = require('chalk');
 
-console.log(chalk.yellow('--------------------Welcome to my library 📁--------------------'));
+console.log(chalk.magenta.inverse('--------------------Welcome! 📁--------------------'));
 
-mdLinks("Testing/PruebaconLinks.md")
+mdLinks("./package.json")
   .then((result) => {
     console.log(result)
   })
   .catch((error) => {
     console.log(error);
   });
+  
