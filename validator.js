@@ -1,5 +1,6 @@
 const { existsSync } = require("fs");
-const { isAbsolute } = require("path");
+const { isAbsolute, resolve } = require("path");
+const { cwd } = require("process");
 
 /**
  * 
@@ -21,4 +22,14 @@ const validateAbsolute = (pathname) => {
   return absolut ? true : false;
 };
 
-module.exports = { routExist, validateAbsolute };
+/**
+ * 
+ * @param {string} pathname es la ruta relativa 
+ * @returns una ruta absoluta
+ */
+const converToAbsolute = (pathname) => {
+ const almacenRelativa = cwd();
+ return resolve(almacenRelativa, pathname);
+}
+
+module.exports = { routExist, validateAbsolute, converToAbsolute };
