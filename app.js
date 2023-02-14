@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const { Console } = require('console');
+const { resolve } = require('path');
 
 const mdFiles = [];
 //Devuelve true si el path es absoluto sino false.
@@ -36,48 +37,103 @@ const checkFile = filePath => {
 
 // regex para ver si es ruta absoluta
 
-
-
-
 const extractLinks = (ruta) => {
   return new Promise((resolve, reject) => {
-      fs.readFile(ruta, 'utf-8', (error, fileContents) => {
-          if (error) {
-              return reject(error);
-          }
+    fs.readFile(ruta, 'utf-8', (error, fileContents) => {
+      if (error) {
+        return reject(error);
+      }
 
-          const regex = /\[(.*)\]\((https?:\/\/\S+)\)/g;
-          const links = [];
+      const regex = /\[(.*)\]\((https?:\/\/\S+)\)/g;
+      const links = [];
 
-          let match;
-          while ((match = regex.exec(fileContents))) {
-              links.push({
-                  text: match[1],
-                  href: match[2],
-                  file: ruta
-              });
-          }
+      let match;
+      while ((match = regex.exec(fileContents))) {
+        links.push({
+          text: match[1],
+          href: match[2],
+          file: ruta,
 
-          resolve(links);
-      });
+        });
+      }
+
+      resolve(links);
+    });
   });
 };
 
+
 const validateLinks = (links) => {
-  return Promise.all(
-      links.map((link) => {
-          return axios.head(link.href)
-              .then(() => {
-                  link.status = 'OK';
-                  return link;
-              })
-              .catch((error) => {
-                  link.status = error.message;
-                  return link;
-              });
+
+  return new Promise((resolve, reject) => {
+
+
+    axios
+      .get(links)
+      .then(response => {
+        //console.log("repose", response)
+        const contStatus = response.status;
+        const contStatusText = response.statusText;
+       //statusMessage
+        // http: __currentUrl
+        //statusCode
+
+
+
+        resolve({ contStatus, contStatusText })
       })
-  );
+      .catch(error => {
+        if (error.code === 'ENOTFOUND') {
+          reject("codigo roto")
+
+        }
+
+
+      })
+
+
+  })
 };
+const processLinks = (extract) => {
+  extract.then((links) => {
+    // Aquí puedes recorrer los links 
+    links.forEach(link => {
+      const arrli = []
+      const linkHref = link.href
+     
+      validateLinks(linkHref)
+        .then(({ contStatus, contStatusText }) => ({ contStatus, contStatusText }))
+    
+        .catch((error) => console.error(error))
+
+     
+        arrli.push({
+          ...links,
+        
+          
+
+        })
+        console.log("arrli", arrli)
+
+
+    });
+  });
+};
+
+
+
+
+/*
+    axios
+      .get(file)
+      .then(response => {
+        console.log("reponse", response.status);
+      
+      })
+      .catch(error => {
+        console.error(error);
+      });
+*/
 
 
 
@@ -127,29 +183,29 @@ const checkPath = (dir) => {
 
 
 
-const readFiles = (path)=>{
+const readFiles = (path) => {
 
   fs.readFile(path, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return err;
 
-      }
-      console.log(data)
-   return data;
+    }
+    console.log(data)
+    return data;
   });
 
-  }
+}
 
 
 const findLinks = (mdFiles) => {
-  
+
   console.log("mdLinks en findLinks", mdFiles)
-  mdFiles.forEach(file => { 
+  mdFiles.forEach(file => {
 
     console.log("lista array", file);
 
-    console.log("lectura de arr",  readFiles(file))
+    console.log("lectura de arr", readFiles(file))
     return readFiles(file)
 
   });
@@ -157,23 +213,7 @@ const findLinks = (mdFiles) => {
 
 
 
-/*
-    axios
-      .get(file)
-      .then(response => {
-        console.log("reponse", response.status);
-        const content = response.data;
-        const regex = /\[(.*?)\]\((.*?)\)/g;
-        
-        let contLink;
-        if((contLink = regex.match(content)) !== null){
-          links.push(contLink)
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-*/
+
 
 
 
@@ -263,6 +303,6 @@ const mdLinks = (path) => {
 
 
 module.exports = {
-  changeToAbsolute, checkPath,findLinks,readFiles,pathRelative,extractLinks,validateLinks
+  changeToAbsolute, checkPath, findLinks, readFiles, pathRelative, extractLinks, validateLinks, processLinks
 
 };
