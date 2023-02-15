@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const { mdLinks } = require('./index.js');
 
 mdLinks('./README.md')
@@ -5,21 +6,38 @@ mdLinks('./README.md')
 
 .then(() => {
  mdLinks => console.log(mdLinks)
- console.log(process.env); // muestra todas las variables de entorno
-console.log(process.argv); // muestra todos los argumentos de línea de comandos
-console.log(process.argv[2]); // muestra el tercer argumento
+
 
 })
 .catch((error) => {
     console.log(error)
 })
 
-/*absoOurRelative('./README.md')
-.then(() =>  {
-    absoOurRelative  => console.log(absoOurRelative)
 
-})
-.catch((error) => {
-    error => console.error(error)
-})*/
+
+
+
+
+
+
+// const [,, ...args] = process.argv
+
+// console.log(`hola mundo ${args}`)
+
+
+
+// const { argv } = require('process');
+// const { mdLinks } = require('./promise');
+
+// // Interface to get the arguments passed to the
+// // node.js process when run in the command line
+// let path = argv[2];
+// let optionOne = argv[3];
+// let optionTwo = argv[4];
+// let options = [optionOne, optionTwo];
+
+
+// mdLinks(path, options);
+
+// module.exports = { mdLinks }
 

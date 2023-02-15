@@ -1,7 +1,6 @@
 const { changeToAbsolute,pathRelative, extractLinks, validateLinks,processLinks   } = require('./app')
 const fs = require("fs");
 const path = require("path");
-const { Console } = require('console');
 
 const mdLinks = (path, options) => {
   return new Promise((resolve, reject) => {
@@ -9,8 +8,10 @@ const mdLinks = (path, options) => {
 
     if(fs.existsSync(path)){
       
-      processLinks(extractLinks(path))
-   
+     const objFalse = processLinks(extractLinks(path))
+     console.log("objs false", objFalse)
+      objFalse
+      .then(console.log)
      // console.log("es relatiuva",pathRelative(path))
      // console.log("es relatiuva",changeToAbsolute(path))
       
@@ -36,3 +37,6 @@ const mdLinks = (path, options) => {
 module.exports = {
   mdLinks
 }
+const [,, ...args] = process.argv
+
+console.log(`hola mundo ${args}`)

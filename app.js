@@ -67,20 +67,17 @@ const validateLinks = (links) => {
 
   return new Promise((resolve, reject) => {
 
-
     axios
       .get(links)
       .then(response => {
-        //console.log("repose", response)
+        
         const contStatus = response.status;
         const contStatusText = response.statusText;
        //statusMessage
         // http: __currentUrl
         //statusCode
 
-
-
-        resolve(response)
+        resolve({contStatus, contStatusText})
       })
       .catch(error => {
         if (error.code === 'ENOTFOUND') {
@@ -95,31 +92,35 @@ const validateLinks = (links) => {
   })
 };
 const processLinks = (extract) => {
-  extract.then((links) => {
+ return  extract.then((links) => {
     // Aquí puedes recorrer los links 
-    links.forEach(link => {
-      const arrli = []
+ const arrLinks =  links.map(link => {
+  // console.log("linkss", link)
       const linkHref = link.href
      
-      validateLinks(linkHref)
+    const promesaLink =  validateLinks(linkHref)
+      
         .then((response) => {
           const obj = { 
             ...links,
             status: response.status,
             ok: response.statusText 
           };
-          console.log("DFSDFSDF", obj)
+        
           return obj;
         } )
     
         .catch((error) => console.error(error))
 
-     
+     return promesaLink;
         
 
 
     });
+    return arrLinks;
   });
+
+
 };
 
 

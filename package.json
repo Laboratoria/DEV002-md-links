@@ -5,7 +5,7 @@
     "node": ">=16.x"
   },
   "bin": {
-    "mi-comando": "./cli.js"
+    "mycli": "./cli.js"
 
   },
   "keywords": [
