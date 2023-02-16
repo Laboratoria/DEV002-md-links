@@ -1,10 +1,9 @@
-const { existsSync, statSync } = require("fs");
+const { existsSync, statSync, readdirSync } = require("fs");
 const { isAbsolute, resolve } = require("path");
 const { cwd } = require("process");
 
-
 /**
- * 
+ *
  * @param {string} pathname ésta es la ruta
  * @returns se valida si existe un path y retorna un boolean
  */
@@ -14,7 +13,7 @@ const routExist = (pathname) => {
 };
 
 /**
- * 
+ *
  * @param {string} pathname ésta es la ruta
  * @returns se valida si la ruta es absoluta
  */
@@ -24,20 +23,30 @@ const validateAbsolute = (pathname) => {
 };
 
 /**
- * 
- * @param {string} pathname es la ruta relativa 
+ *
+ * @param {string} pathname es la ruta relativa
  * @returns una ruta absoluta
  */
 const converToAbsolute = (pathname) => {
- const almacenRelativa = cwd();
- return resolve(almacenRelativa, pathname);
-}
-
-
+  const almacenRelativa = cwd();
+  return resolve(almacenRelativa, pathname);
+};
 
 const isAdirectory = (pathname) => {
- const state = statSync(pathname);
- return state.isDirectory() ? true : false;
-}
+  const state = statSync(pathname);
+  return state.isDirectory() ? true : false;
+};
 
-module.exports = { routExist, validateAbsolute, converToAbsolute, isAdirectory };
+const readFolder = (pathname) => {
+  const contents = readdirSync(pathname);
+  return contents;
+};
+
+
+module.exports = {
+  routExist,
+  validateAbsolute,
+  converToAbsolute,
+  isAdirectory,
+  readFolder,
+};

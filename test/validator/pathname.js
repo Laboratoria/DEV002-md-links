@@ -6,6 +6,7 @@ const routRelOne = "JS/css.md";
 const directoryS = "C:/Users/Usuario/Desktop/DEV002-md-links/test/files";
 const directoryFalse =
   "C:/Users/Usuario/Desktop/Captura de pantalla 2023-02-14 194814.png";
+const readFiles = "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two"
 
 module.exports = {
   routTestOne,
@@ -13,4 +14,5 @@ module.exports = {
   routRelOne,
   directoryS,
   directoryFalse,
+  readFiles,
 };
