@@ -1,6 +1,7 @@
-const { existsSync } = require("fs");
+const { existsSync, statSync } = require("fs");
 const { isAbsolute, resolve } = require("path");
 const { cwd } = require("process");
+
 
 /**
  * 
@@ -32,4 +33,11 @@ const converToAbsolute = (pathname) => {
  return resolve(almacenRelativa, pathname);
 }
 
-module.exports = { routExist, validateAbsolute, converToAbsolute };
+
+
+const isAdirectory = (pathname) => {
+ const state = statSync(pathname);
+ return state.isDirectory() ? true : false;
+}
+
+module.exports = { routExist, validateAbsolute, converToAbsolute, isAdirectory };
