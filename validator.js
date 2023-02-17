@@ -1,5 +1,5 @@
 const { existsSync, statSync, readdirSync } = require("fs");
-const { isAbsolute, resolve } = require("path");
+const { isAbsolute, resolve, extname } = require("path");
 const { cwd } = require("process");
 
 /**
@@ -43,10 +43,17 @@ const readFolder = (pathname) => {
 };
 
 
+const itsMdFile = (pathname) => {
+  return extname(pathname)=== '.md' ? true : false;
+};
+
+
+
 module.exports = {
   routExist,
   validateAbsolute,
   converToAbsolute,
   isAdirectory,
   readFolder,
+  itsMdFile,
 };
