@@ -48,6 +48,19 @@ const itsMdFile = (pathname) => {
 };
 
 
+const getMdFiles = (pathname) => {
+  let mdArray = [];
+  if (itsMdFile(pathname)) {
+    mdArray.push(pathname);
+  } else if (isAdirectory(pathname)) {
+    const contentMDs = readFolder(pathname);
+    contentMDs.map(
+      (e) => (mdArray = mdArray.concat(getMdFiles(`${pathname}/${e}`)))
+    );
+  }
+  return mdArray;
+};
+
 
 module.exports = {
   routExist,
