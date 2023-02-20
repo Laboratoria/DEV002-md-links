@@ -1,4 +1,4 @@
-const { existsSync, statSync, readdirSync } = require("fs");
+const { existsSync, statSync, readdirSync, readFile } = require("fs");
 const { isAbsolute, resolve, extname } = require("path");
 const { cwd } = require("process");
 
@@ -42,11 +42,9 @@ const readFolder = (pathname) => {
   return contents;
 };
 
-
 const itsMdFile = (pathname) => {
-  return extname(pathname)=== '.md' ? true : false;
+  return extname(pathname) === ".md" ? true : false;
 };
-
 
 const getMdFiles = (pathname) => {
   let mdArray = [];
@@ -61,6 +59,17 @@ const getMdFiles = (pathname) => {
   return mdArray;
 };
 
+const funcReadFiles = (pathname) => {
+  return new Promise((resolve, reject) => {
+    readFile(pathname, "utf-8", (error, files) => {
+      error ? reject(error) : resolve(files);
+    });
+  });
+};
+
+
+
+
 
 module.exports = {
   routExist,
@@ -70,4 +79,5 @@ module.exports = {
   readFolder,
   itsMdFile,
   getMdFiles,
+  funcReadFiles,
 };
