@@ -69,4 +69,5 @@ module.exports = {
   isAdirectory,
   readFolder,
   itsMdFile,
+  getMdFiles,
 };
