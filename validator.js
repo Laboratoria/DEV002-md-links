@@ -1,6 +1,7 @@
 const { existsSync, statSync, readdirSync, readFile } = require("fs");
 const { isAbsolute, resolve, extname } = require("path");
-const { cwd } = require("process");
+const { cwd } = require("process"); 
+//el objeto process requiere la funcion cwd completa la ruta de donde esté cualquier archivo hasta donde estoy, generando así una ruta absoluta.
 
 /**
  *
