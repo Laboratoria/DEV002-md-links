@@ -1,17 +1,46 @@
-const { changeToAbsolute,pathRelative, extractLinks, validateLinks,processLinks   } = require('./app')
+
+const { getAbsolutePath,checkPath,isDirectory, readDir, extractLinks,processLinks,isMdFile } = require('./app')
 const fs = require("fs");
 const path = require("path");
 
-const mdLinks = (path, options) => {
-  return new Promise((resolve, reject) => {
-    
+const mdLinks = (relativePath, options) => {
+ 
 
-    if(fs.existsSync(path)){
+   return getAbsolutePath(relativePath)
+    .then((absolutePath) => {
+      if (!checkPath(absolutePath)) {
+        throw new Error('La ruta no es absoluta');
+      }
+      return isDirectory(absolutePath)
+        .then((isDir) => {
+          if (isDir) {
+            return readDir(absolutePath)
+              .then((files) => {
+                const mdFiles = files.filter((file) => isMdFile(file));
+                const promises = mdFiles.map((file) =>
+                  extractLinks(path.join(absolutePath, file)).then((links) =>
+                    Promise.all(processLinks(links))
+                  )
+                );
+                return Promise.all(promises).then((results) => [].concat(...results));
+              });
+          } else {
+            return extractLinks(absolutePath).then((links) =>
+              Promise.all(processLinks(links))
+            );
+          }
+        });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+   // if(fs.existsSync(path)){
       
-     const objFalse = processLinks(extractLinks(path))
-     console.log("objs false", objFalse)
-      objFalse
-      .then(console.log)
+    // const objFalse = processLinks(extractLinks(path))
+     //////console.log("objs false", objFalse)
+    ////  objFalse
+      //.then(console.log)
      // console.log("es relatiuva",pathRelative(path))
      // console.log("es relatiuva",changeToAbsolute(path))
       
@@ -24,19 +53,16 @@ const mdLinks = (path, options) => {
 
      
 
-    } else {
-      reject("la ruta no existe")
-    }
+   // } else {
+      //reject("la ruta no existe")
+  //  }
 
 
 
 
 
-  })
-}
+
+
 module.exports = {
   mdLinks
 }
-const [,, ...args] = process.argv
-
-console.log(`hola mundo ${args}`)
