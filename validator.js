@@ -1,6 +1,6 @@
 const { existsSync, statSync, readdirSync, readFile } = require("fs");
 const { isAbsolute, resolve, extname } = require("path");
-const { cwd } = require("process"); 
+const { cwd } = require("process");
 //el objeto process requiere la funcion cwd completa la ruta de donde esté cualquier archivo hasta donde estoy, generando así una ruta absoluta.
 
 /**
@@ -68,8 +68,26 @@ const funcReadFiles = (pathname) => {
   });
 };
 
-
-
+const validateRoute = (pathname) => {
+  return new Promise((resolve, reject) => {
+    const arrayResult = [];  //aqui se almacena el contenido de la ruta
+    funcReadFiles(pathname).then((data) => {
+      const regexValiRout = /\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#]+[a-zA-Z0-9!-_$]+)\)/gi
+      let storage = regexValiRout.exec(data)
+      while(storage !== null){
+        arrayResult.push({
+          href: storage[2],
+          text: storage[1],
+          file: pathname
+        })
+        storage = regexValiRout.exec(data)
+      }
+      resolve(arrayResult)
+    }).catch((error) => {
+        reject(error)
+    })
+  });
+};
 
 
 module.exports = {
@@ -81,4 +99,5 @@ module.exports = {
   itsMdFile,
   getMdFiles,
   funcReadFiles,
+  validateRoute,
 };

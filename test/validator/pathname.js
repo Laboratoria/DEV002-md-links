@@ -1,7 +1,7 @@
 // rutas para comprobar mis test
 
 const routTestOne =
-  "D:Backup ticket 3806EscritorioprogramaciónarchivosMD\rutauno.md";
+  "D:Backup ticket 3806EscritorioprogramaciónarchivosMD/rutauno.md";
 const routTestTwo =
   "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/helloWorld.md";
 const routRelOne = "JS/css.md";
@@ -20,7 +20,21 @@ const arrayStore = [
   "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/interna_four/fileFour.md",
 ];
 
-const routEmpty = "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/internaEmpty"
+const routEmpty =
+  "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/internaEmpty";
+
+const manyFiles =
+  "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/file_two.2.md";
+
+const returnOfValidateRoute = [
+  {
+    file: "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/file_two.2.md",
+    href: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro-css",
+    text: "Intro a CSS",
+  },
+];
+
+const returnFail = "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/fail.txt"
 
 module.exports = {
   routTestOne,
@@ -31,5 +45,8 @@ module.exports = {
   readFiles,
   mdArrayInternaFour,
   arrayStore,
-  routEmpty
+  routEmpty,
+  manyFiles,
+  returnOfValidateRoute,
+  returnFail,
 };
