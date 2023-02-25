@@ -2,6 +2,7 @@ const { existsSync, statSync, readdirSync, readFile } = require("fs");
 const { isAbsolute, resolve, extname } = require("path");
 const { cwd } = require("process");
 //el objeto process requiere la funcion cwd completa la ruta de donde esté cualquier archivo hasta donde estoy, generando así una ruta absoluta.
+const axios = require("axios");
 
 /**
  *
@@ -70,25 +71,59 @@ const funcReadFiles = (pathname) => {
 
 const validateRoute = (pathname) => {
   return new Promise((resolve, reject) => {
-    const arrayResult = [];  //aqui se almacena el contenido de la ruta
-    funcReadFiles(pathname).then((data) => {
-      const regexValiRout = /\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#]+[a-zA-Z0-9!-_$]+)\)/gi
-      let storage = regexValiRout.exec(data)
-      while(storage !== null){
-        arrayResult.push({
-          href: storage[2],
-          text: storage[1],
-          file: pathname
-        })
-        storage = regexValiRout.exec(data)
-      }
-      resolve(arrayResult)
-    }).catch((error) => {
-        reject(error)
-    })
+    const arrayResult = []; //aqui se almacena el contenido de la ruta
+    funcReadFiles(pathname)
+      .then((data) => {
+        const regexValiRout =
+          /\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#]+[a-zA-Z0-9!-_$]+)\)/gi;
+        let storage = regexValiRout.exec(data);
+        while (storage !== null) {
+          arrayResult.push({
+            href: storage[2],
+            text: storage[1],
+            file: pathname,
+          });
+          storage = regexValiRout.exec(data);
+        }
+        resolve(arrayResult);
+      })
+      .catch((error) => {
+        reject(error);
+      });
   });
 };
 
+const validateLinks = (arraysObject) => {
+  return Promise.all(
+    arraysObject.map((object) =>
+      axios   //peticion GET con axios
+        .get(object.href)
+        .then((res) => {
+          const objectfiveP = {
+            ...object,
+            status: res.status,
+            ok: res.statusText ? res.statusText : "fail",
+          };
+          return objectfiveP;
+        })
+        .catch((error) => error)
+    )
+  );
+};
+
+// validateLinks([
+//   {
+//     file: "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/file_two.2.md",
+//     href: "https://i.postimg.cc/python.jpg",
+//     text: "Intro a CSS",
+//   },
+// ])
+//   .then((validacion) => {
+//     console.log(validacion);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
 
 module.exports = {
   routExist,
@@ -100,4 +135,5 @@ module.exports = {
   getMdFiles,
   funcReadFiles,
   validateRoute,
+  validateLinks,
 };
