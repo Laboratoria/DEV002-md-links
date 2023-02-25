@@ -103,7 +103,7 @@ const validateLinks = (arraysObject) => {
             ...object,
             status: res.status,
             ok: res.statusText ? res.statusText : "fail",
-          };
+          };console.log(res);
           return objectfiveP;
         })
         .catch((error) => error)
@@ -111,19 +111,6 @@ const validateLinks = (arraysObject) => {
   );
 };
 
-// validateLinks([
-//   {
-//     file: "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/file_two.2.md",
-//     href: "https://i.postimg.cc/python.jpg",
-//     text: "Intro a CSS",
-//   },
-// ])
-//   .then((validacion) => {
-//     console.log(validacion);
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//   });
 
 module.exports = {
   routExist,
