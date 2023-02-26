@@ -96,7 +96,7 @@ const validateRoute = (pathname) => {
 const validateLinks = (arraysObject) => {
   return Promise.all(
     arraysObject.map((object) =>
-      axios   //peticion GET con axios
+      axios //peticion GET con axios
         .get(object.href)
         .then((res) => {
           const objectfiveP = {
@@ -111,35 +111,29 @@ const validateLinks = (arraysObject) => {
   );
 };
 
-
 const statUnique = (objectArrays) => {
-  const resultHref = objectArrays.map((object) => object.href)
-  const noRepeatHref = new Set(resultHref)
-  return{
+  const resultHref = objectArrays.map((object) => object.href);
+  const noRepeatHref = new Set(resultHref);
+  return {
     totalFiles: resultHref.length,
     totalUnique: noRepeatHref.size,
-  }
-}
+  };
+};
+
+const returnBrokenLinks = (arrayObjects) => {
+  const allOkBroken = arrayObjects.filter((object) => object.ok === "fail");
+  return {
+    totalFiles: arrayObjects.length,
+    totalUnique: statUnique(arrayObjects).totalUnique,
+    broken: allOkBroken.length,
+  };
+};
 
 
 
-// statUnique([
-//   {
-//     href: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro-css",
-//     status: 200,
-//     ok: "OK",
-//   },
-//   {
-//     href: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro",
-//     status: 200,
-//     ok: "OK",
-//   },
-//   {
-//     href: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro-css",
-//     status: 200,
-//     ok: "OK",
-//   },
-// ])
+
+
+
 
 module.exports = {
   routExist,
@@ -153,4 +147,5 @@ module.exports = {
   validateRoute,
   validateLinks,
   statUnique,
+  returnBrokenLinks,
 };
