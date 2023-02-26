@@ -36,6 +36,37 @@ const returnOfValidateRoute = [
 
 const returnFail = "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/fail.txt"
 
+const linksBrokenGoodAndrepeat =  [
+  {
+    file: "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/file_two.2.md",
+    href: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro-css",
+    text: "Intro a CSS",
+    status: 200,
+    ok: "OK",
+  },
+  {
+    file: "",
+    href: "https://exampleBroke.com",
+    text: "Intro a CSS",
+    status: 404,
+    ok: "fail",
+  },
+  {
+    file: "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/file_two.2.md",
+    href: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro-css",
+    text: "Intro a CSS",
+    status: 200,
+    ok: "OK",
+  },
+  {
+    file: "",
+    href: "https://exampleBroke.com",
+    text: "Intro a CSS",
+    status: 404,
+    ok: "fail",
+  },
+]
+
 module.exports = {
   routTestOne,
   routTestTwo,
@@ -49,4 +80,5 @@ module.exports = {
   manyFiles,
   returnOfValidateRoute,
   returnFail,
+  linksBrokenGoodAndrepeat,
 };
