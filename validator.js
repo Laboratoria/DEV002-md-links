@@ -129,11 +129,13 @@ const returnBrokenLinks = (arrayObjects) => {
   };
 };
 
-
-
-
-
-
+const getAllMdFiles = (pathname) => {
+  if(routExist(pathname)){
+    validateAbsolute(pathname)
+    converToAbsolute(pathname)
+  }
+  return getMdFiles(pathname)
+}
 
 module.exports = {
   routExist,
@@ -148,4 +150,5 @@ module.exports = {
   validateLinks,
   statUnique,
   returnBrokenLinks,
+  getAllMdFiles,
 };
