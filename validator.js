@@ -103,7 +103,7 @@ const validateLinks = (arraysObject) => {
             ...object,
             status: res.status,
             ok: res.statusText ? res.statusText : "fail",
-          };console.log(res);
+          };
           return objectfiveP;
         })
         .catch((error) => error)
@@ -111,6 +111,35 @@ const validateLinks = (arraysObject) => {
   );
 };
 
+
+const statUnique = (objectArrays) => {
+  const resultHref = objectArrays.map((object) => object.href)
+  const noRepeatHref = new Set(resultHref)
+  return{
+    totalFiles: resultHref.length,
+    totalUnique: noRepeatHref.size,
+  }
+}
+
+
+
+// statUnique([
+//   {
+//     href: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro-css",
+//     status: 200,
+//     ok: "OK",
+//   },
+//   {
+//     href: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro",
+//     status: 200,
+//     ok: "OK",
+//   },
+//   {
+//     href: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro-css",
+//     status: 200,
+//     ok: "OK",
+//   },
+// ])
 
 module.exports = {
   routExist,
@@ -123,4 +152,5 @@ module.exports = {
   funcReadFiles,
   validateRoute,
   validateLinks,
+  statUnique,
 };
