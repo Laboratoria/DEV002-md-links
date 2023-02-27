@@ -244,7 +244,7 @@ Reflexiona y luego marca los objetivos que has llegado a entender y aplicar en t
   programáticamente.
 
 * Los **tests unitarios** deben cubrir un mínimo del 70% de _statements_,
-  _functions_, _lines_ y _branches_. Te recomendamos explorar [Jest](https://jestjs.io/)
+  _functions_, _lines_ y _branches_. Te recomendamos explorar [Jest](https://jestjs.io/sandra)
   para tus pruebas unitarias.
 
 * Para este proyecto **no está permitido** utilizar `async/await`.
@@ -483,7 +483,7 @@ si tienes dudas existenciales con respecto a estas decisiones. No existe una
 
 ### Tutoriales / NodeSchool workshoppers
 
-* [learnyounode](https://github.com/workshopper/learnyounode)
+* [learnyounode(https://github.com/workshopper/learnyounode)
 * [how-to-npm](https://github.com/workshopper/how-to-npm)
 * [promise-it-wont-hurt](https://github.com/stevekane/promise-it-wont-hurt)
 

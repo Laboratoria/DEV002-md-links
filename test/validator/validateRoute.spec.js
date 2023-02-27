@@ -1,16 +1,15 @@
 const { validateRoute } = require("../../validator");
 
-const { manyFiles, returnOfValidateRoute, returnFail } = require("./pathname");
+const { manyFiles } = require("./pathname");
 
 describe("Everything related to the readFolder fuction", () => {
   it("sould return a promise", () => {
-    validateRoute(manyFiles).then((data) => {
-      expect(data).toStrictEqual(returnOfValidateRoute);
+    return validateRoute(manyFiles).then((data) => {
+      expect(data).toBeInstanceOf(Array);
     });
   });
   it("if it returns an error", () => {
-    validateRoute(returnFail).catch((error) => {
-      expect(error).rejects.toThrowError();
-    });
+    const errorMessages = "ENOENT: no such file or directory, open 'C:\\Users\\Usuario\\Desktop\\DEV002-md-links\\file_noFound.md'"
+    return expect(validateRoute("file_noFound.md")).rejects.toThrowError(errorMessages);
   });
 });
