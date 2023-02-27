@@ -69,7 +69,7 @@ Reflexiona y luego marca los objetivos que has llegado a entender y aplicar en t
 
   * [Arreglos](https://curriculum.laboratoria.la/es/topics/javascript/04-arrays)
   * [Array - MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/)
-  * [Array.prototype.sort() - MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
+  * [Array.prototype.sort() - MDN](https://example.com)
   * [Array.prototype.forEach() - MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach)
   * [Array.prototype.map() - MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/map)
   * [Array.prototype.filter() - MDN](https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
@@ -471,7 +471,7 @@ links podría plantearse de las siguientes maneras (todas válidas):
 * Siguiendo otro camino completamente, podríamos usar
   [expresiones regulares (`RegExp`)](https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Regular_Expressions).
 * También podríamos usar una combinación de varios _módulos_ (podría ser válido
-  transformar el markdown a HTML usando algo como [marked](https://github.com/markedjs/marked)
+  transformar el markdown a HTML usando algo como [marked](https://example.com)
   y de ahí extraer los link con una librería de DOM como [JSDOM](https://github.com/jsdom/jsdom)
   o [Cheerio](https://github.com/cheeriojs/cheerio) entre otras).
 * Usando un _custom renderer_ de [marked](https://github.com/markedjs/marked)
@@ -560,8 +560,9 @@ Es por ello que, para visualizar mejor lo que tendrás que hacer
 y planificar tus tareas y objetivos, es recomendable hacer un
 `diagrama de flujo`.
 
-Si nunca has hecho un diagrama de flujo revisa este [recurso](https://www.youtube.com/watch?v=Lub5qOmY4JQ).
+Si nunca has hecho un diagrama de flujo revisa este [recurso](https://example.com).
 
+https://example.com
 Una alternativa al diagrama de flujo puede ser el `pseudocódigo`.
 
 ### Planificación

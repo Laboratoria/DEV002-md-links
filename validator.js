@@ -120,6 +120,8 @@ const statUnique = (objectArrays) => {
   };
 };
 
+//esta función me retorna lo que se necesita si la opcion que se ingresa
+//es --validate y --stats juntos(total files, unique files, broken)
 const returnBrokenLinks = (arrayObjects) => {
   const allOkBroken = arrayObjects.filter((object) => object.ok === "fail");
   return {
