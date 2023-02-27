@@ -7,7 +7,7 @@ describe("Everything related to the funcReadFiles fuction", () => {
     expect(typeof funcReadFiles).toEqual("function");
   });
   it("should read the file", () => {
-    funcReadFiles(routTestTwo).then((data) => {
+    return funcReadFiles(routTestTwo).then((data) => {
       expect(data).toEqual("# hello world");
     });
   });

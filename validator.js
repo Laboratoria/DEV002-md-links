@@ -88,10 +88,11 @@ const validateRoute = (pathname) => {
         resolve(arrayResult);
       })
       .catch((error) => {
-        reject(error);
+        return reject(error);
       });
   });
 };
+
 
 const validateLinks = (arraysObject) => {
   return Promise.all(
@@ -106,10 +107,13 @@ const validateLinks = (arraysObject) => {
           };
           return objectfiveP;
         })
-        .catch((error) => error)
+        .catch((err) => {
+          return err
+        })
     )
   );
 };
+
 
 const statUnique = (objectArrays) => {
   const resultHref = objectArrays.map((object) => object.href);

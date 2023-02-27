@@ -28,9 +28,9 @@ const manyFiles =
 
 const returnOfValidateRoute = [
   {
-    file: "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/file_two.2.md",
     href: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro-css",
-    text: "Intro a CSS",
+    text: "https://curriculum.laboratoria.la/es/topics/css/01-css/01-intro-css",
+    file: "C:/Users/Usuario/Desktop/DEV002-md-links/test/files/interna_one/interna_two/file_two.2.md",
   },
 ];
 

@@ -18,7 +18,7 @@ describe("everything related to the validateLinks function", () => {
       status: 200,
       statusText: "OK",
     });
-    validateLinks(containerArrayObjects).then((data) => {
+    return validateLinks(containerArrayObjects).then((data) => {
       expect(data).toHaveLength(1);
       expect(data[0].status).not.toBe(404)
     });
@@ -27,14 +27,13 @@ describe("everything related to the validateLinks function", () => {
   it("soult return a status 404", () => {
     const arrayObject404 = [
       {
-        href: "https://example.com",
-        status: 404,
-        ok: "fail",
+        href: "https://jestjs.io/sandra",
       },
     ];
-    axios.get.mockResolvedValueOnce(arrayObject404[0]);
+    axios.get.mockRejectedValueOnce({status: 404,
+      statusText: "fail"});
 
-    validateLinks(arrayObject404).then((data) => {
+    return validateLinks(arrayObject404).then((data) => {
       data.forEach((e) => {
         // debo recorrer el contenido del objeto para acceder a status
         expect(e.status).not.toBe(200);
