@@ -39,3 +39,4 @@ describe("mdLink", () => {
     return expect(mdLink(path, option)).rejects.toThrowError(errorMessage);
   });
 });
+ 
