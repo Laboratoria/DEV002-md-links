@@ -1,5 +1,5 @@
 {
-  "name": "validate-linkssr",
+  "name": "validate-link-ss",
   "version": "1.0.0",
   "description": "Libreria en la que el usuario puede validar sus archivos Markdown",
   "main": "index.js",

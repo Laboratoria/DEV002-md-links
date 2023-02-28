@@ -28,19 +28,19 @@
 1. instalar mdLinks de forma global
 
 ````
-npm install -g  mdLinks
+npm install -g  validate-link-ss
 ````
 
 2. También puede instalar mdLinks como una dependencia de desarrollo:
 
 ````
-npm install mdLinks --save-dev
+npm install validate-link-ss --save-dev
 ````
 
 3. puede usar github para su instalación
 
 ````
-npm install https://github.com/Sebastian009w/MD-link.git
+npm install https://github.com/SandraLore18/DEV002-md-links.git
 ````
 ## 3. Uso
 
@@ -49,13 +49,13 @@ npm install https://github.com/Sebastian009w/MD-link.git
 1. si se instala de forma global solo es llamar la herramienta y pasar el archivo `markdown`
 
 ````
-mdLinks <path-name-file.md>
+validate-link-ss <path-name-file.md>
 ````
 
 2. si lo instaló como una dependecia de desarrollo utilice el siguiente comando:
 
 ````
-npx mdLinks <path-name-file.md>
+npx validate-link-ss <path-name-file.md>
 ````
 
 - obtendrá información de todos los links encontrados en su archivo `.md`
@@ -84,13 +84,13 @@ npx mdLinks <path-name-file.md>
 
 - puede usar la opcion `--validate` para comprobar el estado de su link, para usarlo siga los siguientes pasos:
 
+````
+validate-link-ss <path-name-file.md> --validate
+````
 
-mdLinks <path-name-file.md> --validate
-
-
-
-npx mdLinks <path-name-file.md> --validate
-
+````
+npx validate-link-ss <path-name-file.md> --validate
+````
 
 - tendrá el siguiente resultado:
 
@@ -121,16 +121,16 @@ npx mdLinks <path-name-file.md> --validate
 ]
 ````
 
-### Opcion stats
+### Opción stats
 
-- puede usar la opcion `--stats` si deseas ver las estadisticas de tus links,ejecuta el siguiente comando :
-
-````
-mdLinks <path-name-file.md> --stats
-````
+- puede usar la opción `--stats` si deseas ver las estadisticas de tus links, ejecuta el siguiente comando :
 
 ````
-npx mdLinks <path-name-file.md> --stats
+validate-link-ss <path-name-file.md> --stats
+````
+
+````
+npx validate-link-ss <path-name-file.md> --stats
 ````
 
 - obtendrá el siguiente resultado:
@@ -161,11 +161,11 @@ npx mdLinks <path-name-file.md> --stats
 - ejecute el siguiente comando:
 
 ````
-mdLinks <path-name-file.md> --validate --stats
+validate-link-ss <path-name-file.md> --validate --stats
 ````
 
 ````
-npx mdLinks <path-name-file.md> --validate --stats
+npx validate-link-ss <path-name-file.md> --validate --stats
 ````
 
 - obtendrá el siguiente resultado:
