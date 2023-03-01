@@ -14,7 +14,7 @@ describe("everything related to the validateLinks function", () => {
         ok: "OK",
       },
     ];
-    axios.get.mockResolvedValueOnce({
+    axios.get.mockResolvedValueOnce({//metodo de jest simula peticion y la resuelve
       status: 200,
       statusText: "OK",
     });

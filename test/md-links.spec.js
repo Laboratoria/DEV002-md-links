@@ -2,25 +2,24 @@ const { mdLink } = require("../index");
 const { validateRoute } = require("../validator");
 
 describe("mdLink", () => {
-  jest.setTimeout(25000);
   it("without options it should return an array", () => {
     return mdLink("./README.md", []).then((data) => {
       expect(data).toBeInstanceOf(Array);
     });
   });
   it("if they enter both options", () => {
-    return mdLink("./README.md", ["--validate", "--stats"]).then((data) => {
-      expect(data).toEqual({ totalFiles: 18, totalUnique: 17, broken: 0 });
+    return mdLink("./test/files/interna_one/interna_three/fileThree.md", ["--validate", "--stats"]).then((data) => {
+      expect(data).toEqual({ totalFiles: 1, totalUnique: 1, broken: 0 });
     });
   });
   it("if the option it's --stats", () => {
-    return mdLink("./README.md", ["--stats"]).then((data) => {
-      expect(data).toEqual({ totalFiles: 18, totalUnique: 17 });
+    return mdLink("./test/files/interna_one/interna_three/fileThree.md", ["--stats"]).then((data) => {
+      expect(data).toEqual({ totalFiles: 1, totalUnique: 1 });
     });
   });
 
   it("if the option it's --validate", () => {
-    const path = "./README.md";
+    const path = "./test/files/interna_one/interna_three/fileThree.md";
     const options = ["--validate"];
     return mdLink(path, options).then((data) => {
       if (typeof data === "string") {

@@ -2,7 +2,7 @@ const { validateRoute } = require("../../validator");
 
 const { manyFiles } = require("./pathname");
 
-describe("Everything related to the readFolder fuction", () => {
+describe("Everything related to the validateRoute fuction", () => {
   it("sould return a promise", () => {
     return validateRoute(manyFiles).then((data) => {
       expect(data).toBeInstanceOf(Array);

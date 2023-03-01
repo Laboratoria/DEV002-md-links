@@ -2,7 +2,7 @@ const { existsSync, statSync, readdirSync, readFile } = require("fs");
 const { isAbsolute, resolve, extname } = require("path");
 const { cwd } = require("process");
 //el objeto process requiere la funcion cwd completa la ruta de donde esté cualquier archivo hasta donde estoy, generando así una ruta absoluta.
-const axios = require("axios");
+const axios = require("axios");//para hacer peticiones
 
 /**
  *
@@ -36,7 +36,7 @@ const converToAbsolute = (pathname) => {
 
 const isAdirectory = (pathname) => {
   const state = statSync(pathname);
-  return state.isDirectory() ? true : false;
+  return state.isDirectory() ? true : false;  //isDirectory es una funcion del objeto statSync
 };
 
 const readFolder = (pathname) => {
@@ -55,19 +55,21 @@ const getMdFiles = (pathname) => {
   } else if (isAdirectory(pathname)) {
     const contentMDs = readFolder(pathname);
     contentMDs.map(
-      (e) => (mdArray = mdArray.concat(getMdFiles(`${pathname}/${e}`)))
+      (e) => (mdArray = mdArray.concat(getMdFiles(`${pathname}/${e}`)))// el'/'para acceder al elemento de esa ruta
     );
   }
   return mdArray;
 };
 
-const funcReadFiles = (pathname) => {
+const funcReadFiles = (pathname) => {     //laboratoria nos prohibe usar readFileSync
   return new Promise((resolve, reject) => {
     readFile(pathname, "utf-8", (error, files) => {
       error ? reject(error) : resolve(files);
     });
   });
 };
+
+//a travez de regexValitRout quiero que la ruta cumpla con dicho patron
 
 const validateRoute = (pathname) => {
   return new Promise((resolve, reject) => {
@@ -83,7 +85,7 @@ const validateRoute = (pathname) => {
             text: storage[1],
             file: pathname,
           });
-          storage = regexValiRout.exec(data);
+          storage = regexValiRout.exec(data); 
         }
         resolve(arrayResult);
       })
@@ -95,7 +97,7 @@ const validateRoute = (pathname) => {
 
 
 const validateLinks = (arraysObject) => {
-  return Promise.all(
+  return Promise.all(   //all me da un array de promesas
     arraysObject.map((object) =>
       axios //peticion GET con axios
         .get(object.href)
@@ -108,16 +110,21 @@ const validateLinks = (arraysObject) => {
           return objectfiveP;
         })
         .catch((err) => {
-          return err
+          const resErrorObject = {
+            ...object,
+            status: err.res ? 404 : 404,
+            ok: "fail"
+          }
+          return resErrorObject
         })
     )
   );
 };
 
 
-const statUnique = (objectArrays) => {
+const statUnique = (objectArrays) => { //aqui se manejan las estadísticas
   const resultHref = objectArrays.map((object) => object.href);
-  const noRepeatHref = new Set(resultHref);
+  const noRepeatHref = new Set(resultHref);//Set = noRepeat
   return {
     totalFiles: resultHref.length,
     totalUnique: noRepeatHref.size,
@@ -134,6 +141,7 @@ const returnBrokenLinks = (arrayObjects) => {
     broken: allOkBroken.length,
   };
 };
+
 
 const getAllMdFiles = (pathname) => {
   if(routExist(pathname)){

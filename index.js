@@ -20,7 +20,8 @@ const mdLink = (path, options) => {
       pathnameArray.forEach((elem) => {
         validateRoute(elem)
           .then((data) => {
-            resolve(data);
+            console.log(data)
+            return resolve(data);
           })
           .catch((error) => reject(error));
       });
@@ -30,10 +31,14 @@ const mdLink = (path, options) => {
         (options[0] === "--stats" && options[1] === "--validate")
       ) {
         const routArray = getAllMdFiles(path);
+        
         routArray.forEach((elem) => {
           validateRoute(elem)
-            .then((data) => {
-              resolve(returnBrokenLinks(data));
+          .then((data) => {
+              validateLinks(data).then((result) => {
+                console.log(returnBrokenLinks(result))
+                return resolve(returnBrokenLinks(result));
+              })
             })
         });
       } else if (options[0] === "--validate") {
@@ -42,16 +47,20 @@ const mdLink = (path, options) => {
           validateRoute(elem)
             .then((data) => {
               if (Array.isArray(data)) {
-                validateLinks(data).then((data) => resolve(data));
+                validateLinks(data).then((data) => {
+                  console.log(data)
+                  return resolve(data)
+                });
               }
             })
-            .catch((error) => reject(error));
+             
         });
       } else if (options[0] === "--stats") {
         const routArray = getAllMdFiles(path);
         routArray.forEach((elem) => {
           validateRoute(elem).then((data) => {
-            resolve(statUnique(data));
+            console.log(statUnique(data))
+            return resolve(statUnique(data));
           });
         });
       }
