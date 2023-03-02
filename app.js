@@ -1,19 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { Console } = require('console');
-const { resolve } = require('path');
 
 const mdFiles = [];
  
  // si es¡xiste el archivo
-const fileExists = (pathname) => {
-    return fs.existsSync(pathname);
+const fileExists = (path) => {
+    return fs.existsSync(path);
 }
 
 // si es absoluta
-const checkPath = (pathname) => {
-    return path.isAbsolute(pathname) 
+const checkPath = (path) => {
+    return path.isAbsolute(path) 
 }
 
 //convierte a absoluta
@@ -60,6 +58,7 @@ const isDirectory = (filePath) => {
 };
 
 const extractLinks = (ruta) => {
+  console.log("ruta",ruta);
   return new Promise((resolve, reject) => {
     fs.readFile(ruta, 'utf-8', (error, fileContents) => {
       if (error) {
@@ -81,16 +80,26 @@ const extractLinks = (ruta) => {
 
       resolve(links);
     });
+     .catch((error) => reject(error));
+    
   });
 };
 
+extractLinks("./README")
+.then()
+
+
+
+
+
 const validateLinks = (links) => {
+
 
   return new Promise((resolve, reject) => {
 
     axios
       .get(links)
-      .then(response => {
+      .then((response) => {
         
         const contStatus = response.status;
         const contStatusText = response.statusText;
@@ -100,21 +109,16 @@ const validateLinks = (links) => {
 
         resolve({contStatus, contStatusText})
       })
-      .catch(error => {
-        if (error.code === 'ENOTFOUND') {
-          reject("codigo roto")
-
-        }
-
-
-      })
+      .catch((error) => error)
 
 
   })
 };
 
-const processLinks = (extract) => {
- return  extract.then((links) => {
+
+const processLinks = (path) => {
+ extractLinks(path)
+ .then((links) => {
     // Aquí puedes recorrer los links 
  const arrLinks =  links.map(link => {
   // console.log("linkss", link)
@@ -132,6 +136,7 @@ const processLinks = (extract) => {
           return obj;
         } )
     
+
         .catch((error) => console.error(error))
 
      return promesaLink;
@@ -164,6 +169,13 @@ const processLinks = (extract) => {
 
 
 module.exports = {
-  getAbsolutePath,checkPath,isDirectory, readDir, extractLinks,processLinks,isMdFile
-
+  fileExists,
+  checkPath,
+  getAbsolutePath,
+  isMdFile,
+  readDir,
+  isDirectory,
+  extractLinks,
+  validateLinks,
+  processLinks,
 };

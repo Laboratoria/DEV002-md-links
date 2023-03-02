@@ -4,11 +4,8 @@ const { mdLinks } = require('./index.js');
 mdLinks('./README.md')
 
 
-.then(() => {
- mdLinks => console.log(mdLinks)
+.then((resp) => console.log(resp))
 
-
-})
 .catch((error) => {
     console.log(error)
 })
