@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
-//console.log(path)
+console.log(fs);
 
 //verificar que la ruta es valida
 const validateRoute = (pathRoute) => fs.existsSync(pathRoute);
@@ -28,7 +28,7 @@ const readDirectory = (pathRoute) => fs.readdirSync(pathRoute);
 const validateRouteMd = (pathRoute) =>
   path.extname(pathRoute) === ".md" ? true : false;
 
-//leer archivos md
+//implementando la recursividad
 const RecursiveFunction = (pathRoutes) => {
   let arrReadMd = [];
   if (validateRouteMd(pathRoutes)) {
@@ -46,6 +46,23 @@ const RecursiveFunction = (pathRoutes) => {
   }
   return arrReadMd;
 };
-RecursiveFunction(
-  "C:/Users/56963/OneDrive/CARPETAS AUTOMATICAS (SIN CONTENIDO)/Escritorio/DEV002-md-links/pruebas"
-);
+
+//Leer contenido de archivos md
+const readContentMd = (pathRoute) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(pathRoute,"utf-8", (error, data) => {
+      if (error) {
+        reject("hubo un error");
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
+
+readContentMd('README.md').then((data) => {
+ console.log(data) 
+ 
+}).catch((error) => {
+  console.log(error)
+}) 
