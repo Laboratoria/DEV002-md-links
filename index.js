@@ -12,21 +12,16 @@ const file = (route) => fs.statSync(route).file();
 //Función para ver si es un archivo md
 const mdFile = (route) => (path.extname(route) === '.md');
 
+
+
 //Función para hacerla absoluta | en caso de ser relativa la convierte
 const absolutePath = (route) => (path.isAbsolute(route) ? route : path.resolve(route));
-
-
-
-
-
-
 
 
 console.log(colors.blue('Probando...'));
 console.log(colors.rainbow('MdLinks'));
 console.log(colors.magenta('trabajando con Node.js'));
 console.log(colors.bgCyan('<3'));
-
 
 module.exports = {
   validPath,
