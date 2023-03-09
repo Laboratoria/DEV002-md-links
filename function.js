@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
+const axios = require("axios");
 //console.log(fs);
 
 //verificar que la ruta es valida
@@ -69,24 +70,25 @@ const readContentMd = (pathRoute) => {
 //   console.log(error)
 // })
 
-//validar todo tipo de ruta
-const validateAllRoutes = (pathRoute) => {
+//validar todo tipo de ruta (caso false)
+const invalidateAllRoutes = (pathRoute) => {
   return new Promise((resolve, reject) => {
-    const arrFinalObjet = [] //usar este arr para crear un objet
-    readContentMd(pathRoute) // es lento se maneja con una promesa // provar con readme 
+    const arrFinalObjet = []; //usar este arr para crear un objet
+    readContentMd(pathRoute) // es lento se maneja con una promesa // provar con readme
       .then((data) => {
         const regEx =
           /\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#]+[a-zA-Z0-9!-_$]+)\)/gi;
         //regEx.exec(data)//devuelve arr con link que cumplan con la expresion reg
         let arrResultRegEx = regEx.exec(data); //devuelve arr iterado
-        if (arrResultRegEx !== null) { // evitar que me devuelva null por eso le pido todo lo que dif
+        if (arrResultRegEx !== null) {
+          // evitar que me devuelva null por eso le pido todo lo que dif
           const arrIterado = arrResultRegEx.map((element) => element);
           arrFinalObjet.push({
             href: arrIterado[2],
             text: arrIterado[1],
             file: pathRoute, //provar con readme
-          })
-          resolve(arrFinalObjet)
+          });
+          resolve(arrFinalObjet);
         }
       })
       .catch((error) => {
@@ -94,10 +96,47 @@ const validateAllRoutes = (pathRoute) => {
       });
   });
 };
-// //validateAllRoutes()
+// invalidateAllRoutes('README.md')
 //   .then((data) => {
 //     console.log(data)
 //   })
 //   .catch((error) => {
 //     console.log(error);
 //   });
+
+//validar todo tipo de ruta (caso true) // devolver un arr de aobjet
+const validateAllRoutes = (arrFinalObjet) => {
+  // simulando parameter
+  return Promise.all(
+    arrFinalObjet.map((element) => {
+      //cada objetc es una promesa y all me dev un arr de promise
+      axios
+        .get(element.href)
+        .then((data) => {
+          //data resp de axios big object
+          const objetcValidateTrue = {
+            // spreadOperator copia desde otro lado todo lo que tenga un object (...) copia href tax/ file
+            ...element,
+            status: data.status,
+            statusText: data.statusText,
+          };
+          console.log(objetcValidateTrue);
+        })
+        .catch((error) => {
+          const failObject = {
+            ...element,
+            status: error.data ? 404 : 404,
+            statusText: "FAIL",
+          };
+          console.log(failObject);
+        });
+    })
+  );
+};
+validateAllRoutes([
+  {
+    href: "https://es.wikipedia.org/wiki/Markdown/gina",
+    text: "Markdown",
+    file: "README.md",
+  },
+]);
