@@ -4,15 +4,17 @@ const process = require("process");
 const colors = require("colors");
 // console.log(fs);
 
-//verficar que la ruta sea válida
+//FUNCIONES A UTILIZAR
+
+//¿La ruta existe? 
 // console.log(fs.existsSync('./pruebas'));
 const validPath = (route) => fs.existsSync(route);
 
-//ver si la ruta es absoluta
+//¿La ruta es absoluta?
 // console.log(path.isAbsolute('./pruebas'));
 const absolutePath = (route) => path.isAbsolute(route);
 
-//convierte de relativa en absoluta
+//convierte la ruta de relativa en absoluta
 // console.log(process.cwd("./pruebas"));
 // ruta transformada: C:\Users\tania\OneDrive\Escritorio\Proyectos Laboratoria\mdLinks\DEV002-md-links
 
@@ -21,7 +23,7 @@ const transformAbs = (route) => {
   return path.resolve(validateDirectory, route);
 };
 
-//Validar que sea un directorio
+//¿Es un directorio?
 // console.log (fs.statSync('./pruebas'));
 // console.log(stats.isDirectory('./pruebas'));
 
@@ -55,7 +57,7 @@ const recursive = (paths) => {
   return arrReadMd;
 };
 
-//leer contenidos de archivos md
+//lee directorios y retorna archivos md
 
 const readFileMd = (route) => {
   return new Promise((resolve, reject) => {
