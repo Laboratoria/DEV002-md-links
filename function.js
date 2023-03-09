@@ -1,9 +1,10 @@
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
-console.log(fs);
+//console.log(fs);
 
 //verificar que la ruta es valida
+//
 const validateRoute = (pathRoute) => fs.existsSync(pathRoute);
 
 //valida si es absoluta
@@ -48,9 +49,10 @@ const RecursiveFunction = (pathRoutes) => {
 };
 
 //Leer contenido de archivos md
+//
 const readContentMd = (pathRoute) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(pathRoute,"utf-8", (error, data) => {
+    fs.readFile(pathRoute, "utf-8", (error, data) => {
       if (error) {
         reject("hubo un error");
       } else {
@@ -60,9 +62,42 @@ const readContentMd = (pathRoute) => {
   });
 };
 
-readContentMd('README.md').then((data) => {
- console.log(data) 
- 
-}).catch((error) => {
-  console.log(error)
-}) 
+// readContentMd('README.md').then((data) => {
+//  console.log(data)
+
+// }).catch((error) => {
+//   console.log(error)
+// })
+
+//validar todo tipo de ruta
+const validateAllRoutes = (pathRoute) => {
+  return new Promise((resolve, reject) => {
+    const arrFinalObjet = [] //usar este arr para crear un objet
+    readContentMd(pathRoute) // es lento se maneja con una promesa // provar con readme 
+      .then((data) => {
+        const regEx =
+          /\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#]+[a-zA-Z0-9!-_$]+)\)/gi;
+        //regEx.exec(data)//devuelve arr con link que cumplan con la expresion reg
+        let arrResultRegEx = regEx.exec(data); //devuelve arr iterado
+        if (arrResultRegEx !== null) { // evitar que me devuelva null por eso le pido todo lo que dif
+          const arrIterado = arrResultRegEx.map((element) => element);
+          arrFinalObjet.push({
+            href: arrIterado[2],
+            text: arrIterado[1],
+            file: pathRoute, //provar con readme
+          })
+          resolve(arrFinalObjet)
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+// //validateAllRoutes()
+//   .then((data) => {
+//     console.log(data)
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
