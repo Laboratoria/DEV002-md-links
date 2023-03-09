@@ -1,12 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
+const axios = require("axios");
 const colors = require("colors");
 // console.log(fs);
 
 //FUNCIONES A UTILIZAR
 
-//¿La ruta existe? 
+//¿La ruta existe?
 // console.log(fs.existsSync('./pruebas'));
 const validPath = (route) => fs.existsSync(route);
 
@@ -48,10 +49,11 @@ const recursive = (paths) => {
     const contentRoute = readFile(paths); //leer las rutas del directorio e itera el contenido que tiene
     contentRoute.forEach((paths) => {
       console.log(
-        (arrReadMd = arrReadMd.concat(
-         // recursive(`${}/${}`) //concatenar la ruta de los directorios para que me los devuelva en un array
-        ))
-      ); 
+        (arrReadMd = arrReadMd
+          .concat
+          // recursive(`${}/${}`) //concatenar la ruta de los directorios para que me los devuelva en un array
+          ())
+      );
     });
   }
   return arrReadMd;
@@ -60,20 +62,97 @@ const recursive = (paths) => {
 //lee directorios y retorna archivos md
 
 const readFileMd = (route) => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(route,"utf-8", (error, data) => {
+  return new Promise((res, rej) => {
+    fs.readFile(route, "utf-8", (error, data) => {
       if (error) {
-        reject("ocurrió un error");
+        rej("ocurrió un error");
       } else {
-        resolve(data);
+        res(data);
       }
     });
   });
 };
 
-readFileMd('README.md').then((data) => {
- console.log(data) 
- 
-}).catch((error) => {
-  console.log(error)
-})
+// readFileMd('README.md').then((data) => {
+//  console.log(data)
+//
+// }).catch((error) => {
+// console.log(error)
+// })
+
+//Validar todo tipo de ruta 'false'
+const routeFalse = (route) => {
+  return new Promise((res, rej) => {
+    //usar este array para crear un objeto invalidateAllRoutes
+    const allLinks = [];
+    //promesa(lento) // probar con readme readContentMd
+    readFileMd(route)
+      .then((data) => {
+        const regExp =
+          /\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#]+[a-zA-Z0-9!-_$]+)\)/gi;
+
+        //regExp.exec(data)//devuelve array con link que cumplan con la regEx...
+
+        let resultRegEx = regExp.exec(data); //devuelve array iterado
+        if (resultRegEx !== null) {
+          // evitar que me devuelva null
+
+          const dataFiles = resultRegEx.map((content) => content);
+          allLinks.push({
+            href: dataFiles[2],
+            text: dataFiles[1],
+            file: route, //probar con readme
+          });
+          res(allLinks);
+        }
+      })
+      .catch((error) => {
+        rej(error);
+      });
+  });
+};
+
+// routeFalse('README.md')
+//   .then((data) => {
+//     console.log(data)
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+//validar ruta (true) devolver un arr de objet
+
+const trueRoute = (allLinks) => {
+  // simulando parameter
+  return Promise.all(
+    allLinks.map((content) => {
+      //cada objetc es una promesa y all me dev un arr de promise
+      axios
+        .get(content.href)
+        .then((data) => {
+          //axios
+          const objs = {
+            ...content,
+            status: data.status,
+            statusText: data.statusText,
+          };
+          console.log(objs);
+        })
+        .catch((error) => {
+          const failObject = {
+            ...content,
+            status: error.data ? 404 : 404,
+            statusText: "FAIL",
+          };
+          console.log(failObject);
+        });
+    })
+  );
+};
+trueRoute([
+  {
+    href: "https://es.wikipedia.org/wiki/Markdown/tania",
+    text: "Markdown",
+    file: "README.md",
+  },
+]);
