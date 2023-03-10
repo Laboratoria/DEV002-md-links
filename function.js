@@ -65,7 +65,6 @@ const readContentMd = (pathRoute) => {
 
 // readContentMd('README.md').then((data) => {
 //  console.log(data)
-
 // }).catch((error) => {
 //   console.log(error)
 // })
@@ -125,7 +124,7 @@ const validateAllRoutes = (arrFinalObjet) => {
         .catch((error) => {
           const failObject = {
             ...element,
-            status: error.data ? 404 : 404,
+            status: error.data ? 404 : 404, //consicional abreviada (if)
             statusText: "FAIL",
           };
           console.log(failObject);
@@ -133,10 +132,59 @@ const validateAllRoutes = (arrFinalObjet) => {
     })
   );
 };
-validateAllRoutes([
-  {
-    href: "https://es.wikipedia.org/wiki/Markdown/gina",
-    text: "Markdown",
-    file: "README.md",
-  },
-]);
+// validateAllRoutes([
+//   {
+//     href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//     text: "Markdown",
+//     file: "README.md",
+//   },
+// ]);
+
+// pueden haber repetidos//console.log(new Set([10,20,30,'quince', 'ocho', 8,10,'quince'])) //instancia de un modelo existente // set no funciona con lengh si no con size
+const statsFunction = (arrFinalObjet) => {
+  // me va a devolver un arr de links
+  const arrLinks = arrFinalObjet.map((element) => element.href);
+  const linksUnicos = new Set(arrLinks); // me va a dar linsk unicos
+  return {
+    total: arrLinks.length,
+    unique: linksUnicos.size,
+  };
+};
+// console.log(statsFunction([
+//   {
+//     href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//     text: "Markdown",
+//     file: "README.md",
+//   },
+//   {
+//     href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//     text: "Markdown",
+//     file: "README.md",
+//   },
+// ]));
+
+//validar links rotos
+const brokenLinks = (arrFinalObjet) => {
+  const brokenArr = arrFinalObjet.filter(
+    (element) => element.statusText === "FAIL"
+  ); //filter esta diseñado para filtrar de acuerdo a una condición //devuelve un arr con los rotos
+  return {
+    total: arrFinalObjet.length,
+    unique: statsFunction(arrFinalObjet).unique,
+    broken: brokenArr.length,
+  };
+};
+// console.log(brokenLinks([
+//         {
+//           href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//           text: "Markdown",
+//           file: "README.md",
+//           statusText:"FAIL",
+//         },
+//         {
+//           href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//           text: "Markdown",
+//           file: "README.md",
+//           statusText: "FAIL",
+//         },
+//       ]))
