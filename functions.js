@@ -149,10 +149,58 @@ const trueRoute = (allLinks) => {
     })
   );
 };
-trueRoute([
-  {
-    href: "https://es.wikipedia.org/wiki/Markdown/tania",
-    text: "Markdown",
-    file: "README.md",
-  },
-]);
+// trueRoute([
+// {
+// href: "https://es.wikipedia.org/wiki/Markdown/tania",
+// text: "Markdown",
+// file: "README.md",
+// },
+// ]);
+
+// estadística de archivos repetidos (en caso de que hayan) console.log(new Set([50,90,30,'veinte', 'ocho', 90,30,'quince'])) //instancia de un modelo existente // set no funciona con lengh si no con size
+const statsRep = (allLinks) => {
+  // me va a devolver un arr de links
+  const linksAr = allLinks.map((content) => content.href);
+  const linksU = new Set(linksAr); // me va a dar linsk unicos
+  return {
+    total: linksAr.length,
+    unique: linksU.size,
+  };
+};
+// console.log(statsRep([
+//   {
+//     href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//     text: "Markdown",
+//     file: "README.md",
+//   },
+//   {
+//     href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//     text: "Markdown",
+//     file: "README.md",
+//   },
+// ]));
+//validar links rotos
+const brokenLinks = (allLinks) => {
+  const brokenAr = allLinks.filter(
+    (content) => content.statusText === "FAIL"
+  ); //filter esta diseñado para filtrar de acuerdo a una condición //devuelve un arr con los rotos
+  return {
+    total: allLinks.length,
+    unique: statsRep(allLinks).unique,
+    broken: brokenAr.length,
+  };
+};
+// console.log(brokenLinks([
+//         {
+//           href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//           text: "Markdown",
+//           file: "README.md",
+//           statusText:"FAIL",
+//         },
+//         {
+//           href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//           text: "Markdown",
+//           file: "README.md",
+//           statusText: "FAIL",
+//         },
+//       ]))
