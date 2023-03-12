@@ -20,7 +20,7 @@ const convertAbsulute = (pathRoute) => {
 //validar que sea un directorio
 const validateDirectory = (pathRoute) => {
   const stats = fs.statSync(pathRoute);
-  return stats.isDirectory(); 
+  return stats.isDirectory();
 };
 
 //leer los archivos de ese directorio // devuelve un arr con el contenido del direct
@@ -37,7 +37,8 @@ const RecursiveFunction = (pathRoute) => {
     arrReadMd.push(pathRoute); //se llena si la ruta tiene ext md si no es un directory
   } else if (validateDirectory(pathRoute)) {
     const contentRoute = readDirectory(pathRoute); //leer las rutas del directorio e itera el contenido que tiene
-    contentRoute.forEach((route) => { //rote es el elemt que se esta iterando del arr de string qur me devolv contenRoute
+    contentRoute.forEach((route) => {
+      //rote es el elemt que se esta iterando del arr de string qur me devolv contenRoute
       console.log(
         (arrReadMd = arrReadMd.concat(
           RecursiveFunction(`${pathRoute}/${route}`)
@@ -52,9 +53,10 @@ const RecursiveFunction = (pathRoute) => {
 //
 const readContentMd = (pathRoute) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(pathRoute, "utf-8", (error, data) => { // un callback es una funcion dentro de otra
+    fs.readFile(pathRoute, "utf-8", (error, data) => {
+      // un callback es una funcion dentro de otra
       if (error) {
-        reject("hubo un error");   ////**TAREA URGENTE**
+        reject("hubo un error"); ////**TAREA URGENTE**
       } else {
         resolve(data);
       }
@@ -80,11 +82,11 @@ const invalidateAllRoutes = (pathRoute) => {
         let arrResultRegEx = regEx.exec(data); //devuelve arr iterado new arr
         if (arrResultRegEx !== null) {
           // evitar que me devuelva null por eso le pido todo lo que dif
-          const arrIterado = arrResultRegEx.map((element) => element);  //
-          console.log(arrIterado)
+          const arrIterado = arrResultRegEx.map((element) => element); //
+          console.log(arrIterado);
           arrFinalObjet.push({
             href: arrIterado[2], //url de archivo md
-            text: arrIterado[1], 
+            text: arrIterado[1],
             file: pathRoute, //provar con readme
           });
           resolve(arrFinalObjet);
@@ -110,7 +112,7 @@ const validateAllRoutes = (arrFinalObjet) => {
     arrFinalObjet.map((element) => {
       //cada objetc es una promesa y all me dev un arr de promise
       axios
-        .get(element.href) // hace peticion para obtener datos //obtener inf de esa url get post put delete 
+        .get(element.href) // hace peticion para obtener datos //obtener inf de esa url get post put delete
         .then((data) => {
           //data resp de axios big object
           const objetcValidateTrue = {
@@ -193,8 +195,15 @@ const obtenerArchivosMd = (pathRoute) => {
   if (validateRoute(pathRoute)) {
     absoluteRoute(pathRoute);
     convertAbsulute(pathRoute);
-  } else {
-    console.log("TU RUTA ES INVALIDA");
   }
+  return RecursiveFunction(pathRoute); // dev un arr con archivos md
 };
+
 //obtenerArchivosMd();
+module.exports = {
+  obtenerArchivosMd,
+  invalidateAllRoutes,
+  validateAllRoutes,
+  brokenLinks,
+  statsFunction,
+};
