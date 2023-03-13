@@ -192,15 +192,25 @@ const brokenLinks = (allLinks) => {
 };
 // console.log(brokenLinks([
 //         {
-//           href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//           href: "https://es.wikipedia.org/wiki/Markdown/tania",
 //           text: "Markdown",
 //           file: "README.md",
 //           statusText:"FAIL",
 //         },
 //         {
-//           href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//           href: "https://es.wikipedia.org/wiki/Markdown/tania",
 //           text: "Markdown",
 //           file: "README.md",
 //           statusText: "FAIL",
 //         },
 //       ]))
+
+//obtener archivos md //usar ej readme
+const addFileMd = (route) => {
+  if (validPath(route)) {
+    absolutePath(route);
+    transformAbs(route);
+  }
+  return recursive(route); // dev un arr con archivos md
+};
+console.log (addFileMd('README.md'));
