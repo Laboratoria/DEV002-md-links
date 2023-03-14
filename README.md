@@ -23,7 +23,9 @@ El objetivo de esta librería es crear una herramienta que facilite a las person
 
 ## Flowchart
 
-
+![flowchart](./imgdrawio/drawio1.png)
+![flowchart](./imgdrawio/drawio2.png)
+![flowchart](./imgdrawio/drawio3.png)
 
 ## Usability mode
 ***
