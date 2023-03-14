@@ -20,44 +20,39 @@ const absolutePath = (route) => path.isAbsolute(route);
 // ruta transformada: C:\Users\tania\OneDrive\Escritorio\Proyectos Laboratoria\mdLinks\DEV002-md-links
 
 const transformAbs = (route) => {
-  const validateDirectory = process.cwd(); //verifica si el arcivo existe en el local
-  return path.resolve(validateDirectory, route); //si es directorio, devuelve una ruta absoluta
+  const validDir = process.cwd(); //verifica si el arcivo existe en el local
+  return path.resolve(validDir, route); //si es directorio, devuelve una ruta absoluta
 };
 
 //¿Es un directorio?
 
-const validDir = (route) => { //devuelve 'true' si la ruta especificada es una carpeta válida, y 'false' si no lo es.
+const validDir = (route) => {
+  //devuelve 'true' si la ruta especificada es una carpeta válida, y 'false' si no lo es.
   const stats = fs.statSync(route);
   return stats.isDirectory();
 };
-// console.log (fs.statSync('./pruebas'));
-// console.log(stats.isDirectory('./pruebas'));
 
 //lee los archivos del directorio
 //console.log(fs.readdirSync('./pruebas')); debería devolver un array con el contenido de ese directorio
 const readFile = (route) => fs.readdirSync(route);
 
-//validar que la función sea md
+//validar que la función sea md devuelve la ext se un arch
 const mdFile = (route) => (path.extname(route) === ".md" ? true : false);
 
 //recursividad
-const recursive = (paths) => {
+const recursive = (route) => {
   let arrReadMd = [];
-  if (mdFile(paths)) {
-    arrReadMd.push(paths); //se llena si la ruta tiene ext md si no es un directorio
-  } else if (validDir(paths)) {
-    const contentRoute = readFile(paths); //leer las rutas del directorio e itera el contenido que tiene
-    contentRoute.forEach((paths) => {
-       //rote es el elemt que se esta iterando del arr de string qur me devolv contenRoute
-        (arrReadMd = arrReadMd
-          .concat
-          (recursive(`${route}/${route}`) //concatenar la ruta de los directorios para que me los devuelva en un array
-          ())
-      );
-    });
+  if (mdFile(route)) {
+    arrReadMd.push(route); //se llena si la ruta tiene ext md si no es un directorio
+  } else if (validDir(route)) {
+    const contentRoute = readFile(route); //leer las rutas del directorio e itera el contenido que tiene
+    contentRoute.forEach((pathRoute) => {
+      //route es el elemt que se esta iterando del arr de string que me devolv contenRoute
+
+      arrReadMd = arrReadMd.concat(recursive(`${route}/${pathRoute}`));  
+    })
   }
   return arrReadMd;
-  
 };
 
 //lee directorios y retorna archivos md
@@ -65,36 +60,24 @@ const recursive = (paths) => {
 const readFileMd = (route) => {
   return new Promise((res, rej) => {
     fs.readFile(route, "utf-8", (error, data) => {
-      if (error) {
-        rej("ocurrió un error");
-      } else {
-        res(data);
-      }
+      error ? rej("Ocurrió un error") : res(data);
+        
+      });
     });
-  });
 };
 // const readFileMd = (route) => {
-  // return new Promise((res, rej) => {
-    // fs.readFile(route, "utf-8", (error, data) => {
-      // error ? rej("ocurrió un error") : res(data);
-    // });
-  // });
+// return new Promise((res, rej) => {
+// fs.readFile(route, "utf-8", (error, data) => {
+// error ? rej("ocurrió un error") : res(data);
+// });
+// });
 // };
-
-// readFileMd('README.md').then((data) => {
-//  console.log(data)
-//
-// }).catch((error) => {
-// console.log(error)
-// })
 
 //Validar todo tipo de ruta 'false'
 const routeFalse = (route) => {
   return new Promise((res, rej) => {
-    //usar este array para crear un objeto invalidateAllRoutes
-    const allLinks = [];
-    //promesa(lento) // probar con readme readContentMd
-    readFileMd(route)
+    const allLinks = []; //usar este array para crear un objeto
+    readFileMd(route) //promesa(lento) probar con readme readContentMd
       .then((data) => {
         const regExp =
           /\[([\w\s\d]+)\]\(((?:\/|https?:\/\/)[\w\d./?=#]+[a-zA-Z0-9!-_$]+)\)/gi;
@@ -102,17 +85,17 @@ const routeFalse = (route) => {
         //regExp.exec(data)//devuelve array con link que cumplan con la regEx...
 
         let resultRegEx = regExp.exec(data); //devuelve array iterado
-        if (resultRegEx !== null) {
+        while (resultRegEx !== null) {
           // evitar que me devuelva null
 
-          const dataFiles = resultRegEx.map((content) => content);
           allLinks.push({
-            href: dataFiles[2],
-            text: dataFiles[1],
+            href: resultRegEx[2],
+            text: resultRegEx[1],
             file: route, //probar con readme
           });
-          res(allLinks);
+          resultRegEx = regExp.exec(data);
         }
+        res(allLinks);
       })
       .catch((error) => {
         rej(error);
@@ -128,23 +111,23 @@ const routeFalse = (route) => {
 //     console.log(error);
 //   });
 
-//validar ruta (true) devolver un arr de objet
+//validar ruta (true) devolver un array de objeto
 
 const trueRoute = (allLinks) => {
   // simulando parameter
   return Promise.all(
-    allLinks.map((content) => {  //cada objeto es una promesa y all me dev un array de promesa
-    
-      axios
-        .get(content.href)
+    allLinks.map((content) => {
+      //cada objeto es una promesa y all me dev un array de promesa
+      return axios //peticiones http a un serv
+        .get(content.href) //hace peticion para obtener datos obtener inf de esa url
         .then((data) => {
           //axios
           const objs = {
             ...content,
-            status: data.status,
-            statusText: data.statusText,
+            status: data.status, //se presenta con num
+            statusText: data.statusText, //string
           };
-          console.log(objs);
+          return (objs);
         })
         .catch((error) => {
           const failObject = {
@@ -152,7 +135,7 @@ const trueRoute = (allLinks) => {
             status: error.data ? 404 : 404,
             statusText: "FAIL",
           };
-          console.log(failObject);
+          return(failObject);
         });
     })
   );
@@ -189,9 +172,7 @@ const statsRep = (allLinks) => {
 // ]));
 //validar links rotos
 const brokenLinks = (allLinks) => {
-  const brokenAr = allLinks.filter(
-    (content) => content.statusText === "FAIL"
-  ); //filter esta diseñado para filtrar de acuerdo a una condición //devuelve un arr con los rotos
+  const brokenAr = allLinks.filter((content) => content.statusText === "FAIL"); //filtrar de acuerdo a una condición //devuelve un arr con los rotos
   return {
     total: allLinks.length,
     unique: statsRep(allLinks).unique,
@@ -221,7 +202,6 @@ const addFileMd = (route) => {
   }
   return recursive(route); // devuelve un array con archivos md
 };
-// console.log (addFileMd('README.md'));
 
 // addFileMd();
 module.exports = {

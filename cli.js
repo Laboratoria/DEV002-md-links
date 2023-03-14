@@ -1,5 +1,4 @@
-
-#!/usr/bin/env node //indica qué programa debe ejecutar el archivo
+#!/usr/bin/env node
 
 const mdLinks = require('./mdLinks'); // se importa la función mdLinks
 const process = require("process");
@@ -14,9 +13,9 @@ mdLinks(path2, arOptions);
 
 module.exports = mdLinks;
 
-console.log(colors.bgYellow('Probando...'));
-console.log(colors.rainbow('MdLinks'));
-console.log(colors.magenta('trabajando con Node.js'));
-console.log(colors.bgCyan('<3'));
+// console.log(colors.bgYellow('Probando...'));
+// console.log(colors.rainbow('MdLinks'));
+// console.log(colors.magenta('trabajando con Node.js'));
+// console.log(colors.bgCyan('<3'));
 
 

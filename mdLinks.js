@@ -1,7 +1,9 @@
 const {
   addFileMd,
   routeFalse,
+  trueRoute,
   brokenLinks,
+  statsRep
 } = require("./function"); //use destructuración para importar funciones
 const colors = require('colors');
 
@@ -35,11 +37,11 @@ const mdLinks = (path, options) => {
         });
 
       } else if (options[0] === "--validate") {
-        const arrMd = obtenerArchivosMd(path);
+        const arrMd = addFileMd(path);
         arrMd.map((element) => {
-          invalidateAllRoutes(element)
+          routeFalse(element)
             .then((data) => {
-              validateAllRoutes(data).then((data)=> {
+              trueRoute(data).then((data)=> {
                 console.log(data) 
                 return resolve(data)
               }
