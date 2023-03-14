@@ -20,18 +20,18 @@ const absolutePath = (route) => path.isAbsolute(route);
 // ruta transformada: C:\Users\tania\OneDrive\Escritorio\Proyectos Laboratoria\mdLinks\DEV002-md-links
 
 const transformAbs = (route) => {
-  const validateDirectory = process.cwd();
-  return path.resolve(validateDirectory, route);
+  const validateDirectory = process.cwd(); //verifica si el arcivo existe en el local
+  return path.resolve(validateDirectory, route); //si es directorio, devuelve una ruta absoluta
 };
 
 //¿Es un directorio?
-// console.log (fs.statSync('./pruebas'));
-// console.log(stats.isDirectory('./pruebas'));
 
-const validDir = (route) => {
+const validDir = (route) => { //devuelve 'true' si la ruta especificada es una carpeta válida, y 'false' si no lo es.
   const stats = fs.statSync(route);
   return stats.isDirectory();
 };
+// console.log (fs.statSync('./pruebas'));
+// console.log(stats.isDirectory('./pruebas'));
 
 //lee los archivos del directorio
 //console.log(fs.readdirSync('./pruebas')); debería devolver un array con el contenido de ese directorio
