@@ -1,22 +1,24 @@
 const {
-  obtenerArchivosMd,
-  invalidateAllRoutes,
+  addFileMd,
+  routeFalse,
   brokenLinks,
 } = require("./function"); //use destructuración para importar funciones
+const colors = require('colors');
 
 const mdLinks = (path, options) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((res, rej) => {
     if (options[0] === undefined && options[1] === undefined) {
-      const pathArr = obtenerArchivosMd(path);
-      pathArr.map((element) => {
+      const inputPath = addFileMd(path);
+      inputPath.map((content) => {
+
         //map recibe una funct y la funct recibe un elemento a iterar
-        invalidateAllRoutes(element)
+        routeFalse(content)
           .then((data) => {
             console.log(data);
-            return resolve(data);
+            return res(data);
           })
           .catch((error) => {
-            reject("TU RUTA ES INVALIDA", error);
+            rej("La ruta ingresada no es válida", error);
           });
       });
     } else {
@@ -24,11 +26,11 @@ const mdLinks = (path, options) => {
         (options[0] === "--validate" && options[1] === "--stats") ||
         (options[0] === "--stats" && options[1] === "--validate")
       ) {
-        const pathArr = obtenerArchivosMd(path);
-        pathArr.map((element) => {
-          invalidateAllRoutes(element).then((data) => {
+        const inputPath = addFileMd(path);
+        inputPath.map((content) => {
+          routeFalse(content).then((data) => {
             console.log(brokenLinks(data))
-            return resolve (brokenLinks(data));
+            return res (brokenLinks(data));
           });
         });
       }

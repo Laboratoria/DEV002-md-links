@@ -48,15 +48,16 @@ const recursive = (paths) => {
   } else if (validDir(paths)) {
     const contentRoute = readFile(paths); //leer las rutas del directorio e itera el contenido que tiene
     contentRoute.forEach((paths) => {
-      console.log(
+       //rote es el elemt que se esta iterando del arr de string qur me devolv contenRoute
         (arrReadMd = arrReadMd
           .concat
-          // recursive(`${}/${}`) //concatenar la ruta de los directorios para que me los devuelva en un array
+          (recursive(`${route}/${route}`) //concatenar la ruta de los directorios para que me los devuelva en un array
           ())
       );
     });
   }
   return arrReadMd;
+  
 };
 
 //lee directorios y retorna archivos md
@@ -72,6 +73,13 @@ const readFileMd = (route) => {
     });
   });
 };
+// const readFileMd = (route) => {
+  // return new Promise((res, rej) => {
+    // fs.readFile(route, "utf-8", (error, data) => {
+      // error ? rej("ocurrió un error") : res(data);
+    // });
+  // });
+// };
 
 // readFileMd('README.md').then((data) => {
 //  console.log(data)
@@ -125,8 +133,8 @@ const routeFalse = (route) => {
 const trueRoute = (allLinks) => {
   // simulando parameter
   return Promise.all(
-    allLinks.map((content) => {
-      //cada objetc es una promesa y all me dev un arr de promise
+    allLinks.map((content) => {  //cada objeto es una promesa y all me dev un array de promesa
+    
       axios
         .get(content.href)
         .then((data) => {
@@ -169,12 +177,12 @@ const statsRep = (allLinks) => {
 };
 // console.log(statsRep([
 //   {
-//     href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//     href: "https://es.wikipedia.org/wiki/Markdown/tania",
 //     text: "Markdown",
 //     file: "README.md",
 //   },
 //   {
-//     href: "https://es.wikipedia.org/wiki/Markdown/gina",
+//     href: "https://es.wikipedia.org/wiki/Markdown/tania",
 //     text: "Markdown",
 //     file: "README.md",
 //   },
@@ -205,12 +213,21 @@ const brokenLinks = (allLinks) => {
 //         },
 //       ]))
 
-//obtener archivos md //usar ej readme
+//obtener archivos md //usar ejemplo readme.md
 const addFileMd = (route) => {
   if (validPath(route)) {
     absolutePath(route);
     transformAbs(route);
   }
-  return recursive(route); // dev un arr con archivos md
+  return recursive(route); // devuelve un array con archivos md
 };
-console.log (addFileMd('README.md'));
+// console.log (addFileMd('README.md'));
+
+// addFileMd();
+module.exports = {
+  addFileMd, //obtiene archivos md
+  routeFalse, //valida ruta false
+  trueRoute, //valida ruta true
+  brokenLinks, //valida los links rotos
+  statsRep, //devuelve stats
+};
